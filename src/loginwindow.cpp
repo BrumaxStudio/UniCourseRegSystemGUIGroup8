@@ -73,7 +73,15 @@ LoginWindow::LoginWindow(QWidget *parent)
     this->setLayout(ptr);
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){
-        QMessageBox::information(this, "Success", "Login Successful");
+        QString username = entryForName->text();
+        QString password = entryForPassword->text();
+
+        if(username.isEmpty() || password.isEmpty()){
+            QMessageBox::warning(this, "Error", "Incomplete Credentials");
+        }
+        else{
+            QMessageBox::information(this, "Success", "Login Successful");
+        }
     });
 
     QObject::connect(SignupButton, &QPushButton::clicked, [&](){
