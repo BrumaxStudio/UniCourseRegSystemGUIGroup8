@@ -9,14 +9,17 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QString>
+#include <QStackedWidget>
 
 class LoginWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit LoginWindow(QWidget *parent = nullptr);
+    explicit LoginWindow(QStackedWidget* parentSW, QWidget *parent = nullptr);
 
 private:
+    QStackedWidget* screenChanger;
+
     QLabel* rsuLogo;
 
     QLabel* loginMessage;
@@ -35,7 +38,7 @@ private:
     QHBoxLayout* nameLayout;
     QHBoxLayout* passwordLayout;
 
-    QVBoxLayout* ptr;
+    QVBoxLayout* mainLayout;
 };
 
 #endif // LOGINWINDOW_HPP

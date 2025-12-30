@@ -1,11 +1,8 @@
 #include "loginwindow.hpp"
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QWidget{parent}
+LoginWindow::LoginWindow(QStackedWidget* parentSW, QWidget *parent)
+    : QWidget{parent}, screenChanger(parentSW)
 {
-    this->resize(800, 600);
-    this->setWindowTitle("University Course Registration System");
-
     //Welcome label
     loginMessage = new QLabel(this);
     loginMessage->setText("Welcome to The Course Registration Portal!");
@@ -52,25 +49,28 @@ LoginWindow::LoginWindow(QWidget *parent)
     SignupButton->setText("Sign up");
     //Pushbutton - signup
 
+    //NAME LAYOUT
     nameLayout = new QHBoxLayout;
     nameLayout->addWidget(nameForLogin);
     nameLayout->addWidget(entryForName);
 
+    //NAME LAYOUT
     passwordLayout = new QHBoxLayout;
     passwordLayout->addWidget(passwordForLogin);
     passwordLayout->addWidget(entryForPassword);
 
+    //LOGIN AND SIGNUP LAYOUT
     loginORsignup = new QHBoxLayout;
     loginORsignup->addWidget(loginButton);
     loginORsignup->addWidget(SignupButton);
 
-    ptr = new QVBoxLayout;
-    ptr->addWidget(loginMessage);
-    ptr->addWidget(rsuLogo);
-    ptr->addLayout(nameLayout);
-    ptr->addLayout(passwordLayout);
-    ptr->addLayout(loginORsignup);
-    this->setLayout(ptr);
+    mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(loginMessage);
+    mainLayout->addWidget(rsuLogo);
+    mainLayout->addLayout(nameLayout);
+    mainLayout->addLayout(passwordLayout);
+    mainLayout->addLayout(loginORsignup);
+    this->setLayout(mainLayout);
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){
         QString username = entryForName->text();
@@ -86,5 +86,6 @@ LoginWindow::LoginWindow(QWidget *parent)
 
     QObject::connect(SignupButton, &QPushButton::clicked, [&](){
         QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
+        screenChanger->setCurrentIndex(1);
     });
 }

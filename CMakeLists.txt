@@ -22,6 +22,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 set(SRC_FILES
     include/loginwindow.hpp
     src/loginwindow.cpp
+    include/signupwindow.hpp
+    src/signupwindow.cpp
     src/main.cpp
 )
 
