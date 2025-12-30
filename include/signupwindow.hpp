@@ -11,6 +11,7 @@
 #include <QStackedWidget>
 #include <QMessageBox>
 #include <QComboBox>
+#include <QString>
 
 class SignupWindow : public QWidget
 {
@@ -43,6 +44,13 @@ private:
     QPushButton* SignupButton;
 
     QHBoxLayout* loginORsignup;
+
+    QLabel* password1;
+    QLabel* password2;
+    QLineEdit* pass1;
+    QLineEdit* pass2;
+    QHBoxLayout* passwordLayout1;
+    QHBoxLayout* passwordLayout2;
 
     QHBoxLayout* firstNameLayout;
     QHBoxLayout* middleNameLayout;

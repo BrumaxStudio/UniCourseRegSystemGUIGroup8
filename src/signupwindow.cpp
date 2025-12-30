@@ -87,6 +87,43 @@ SignupWindow::SignupWindow(QStackedWidget* parentSW, QWidget *parent)
     SignupButton->setText("Sign up");
     //login and sign up
 
+
+    //Password
+    //first
+    password1= new QLabel(this);
+    password1->setText("Password");
+    password1->setFont(QFont("Times"));
+    password1->setStyleSheet("color:gold");
+
+    pass1 = new QLineEdit(this);
+    pass1->setPlaceholderText("Enter new password");
+    pass1->setEchoMode(QLineEdit::Password);
+    pass1->setFont(QFont("Times"));
+    pass1->setStyleSheet("color:gold");
+
+    //second
+    password2= new QLabel(this);
+    password2->setText("Re-enter Password");
+    password2->setFont(QFont("Times"));
+    password2->setStyleSheet("color:gold");
+
+    pass2 = new QLineEdit(this);
+    pass2->setPlaceholderText("Enter password again");
+    pass2->setEchoMode(QLineEdit::Password);
+    pass2->setFont(QFont("Times"));
+    pass2->setStyleSheet("color:gold");
+    //Password
+
+    //PASSWORD LAYOUT
+    passwordLayout1 = new QHBoxLayout;
+    passwordLayout1->addWidget(password1);
+    passwordLayout1->addWidget(pass1);
+
+    passwordLayout2 = new QHBoxLayout;
+    passwordLayout2->addWidget(password2);
+    passwordLayout2->addWidget(pass2);
+    //PASSWORD LAYOUT
+
     //LOGIN AND SIGNUP LAYOUT
     loginORsignup = new QHBoxLayout;
     loginORsignup->addWidget(loginButton);
@@ -132,25 +169,36 @@ SignupWindow::SignupWindow(QStackedWidget* parentSW, QWidget *parent)
     mainLayout->addLayout(lastNameLayout);
     mainLayout->addLayout(genderLayout);
     mainLayout->addLayout(deptLayout);
+    mainLayout->addLayout(passwordLayout1);
+    mainLayout->addLayout(passwordLayout2);
     mainLayout->addLayout(loginORsignup);
-
     this->setLayout(mainLayout);
     //MAIN LAYOUT
 
-    /*QObject::connect(loginButton, &QPushButton::clicked, [&](){
-        QString username = entryForName->text();
-        QString password = entryForPassword->text();
+    QObject::connect(SignupButton, &QPushButton::clicked, [&](){
+        QString f_name = firstNameLE->text();
+        QString m_name = middleNameLE->text();
+        QString l_name = lastNameLE->text();
 
-        if(username.isEmpty() || password.isEmpty()){
-            QMessageBox::warning(this, "Error", "Incomplete Credentials");
+        QString gen_v = gen->currentText();
+        QString dept_v = dept->currentText();
+
+        QString password_1_v = pass1->text();
+        QString password_2_v = pass2->text();
+
+        if(f_name.isEmpty() || l_name.isEmpty() || gen_v.isEmpty() || dept_v.isEmpty()){
+            QMessageBox::warning(this, "Error", "Incomplete Details!");
+        }
+        else if(password_1_v != password_2_v){
+            QMessageBox::warning(this, "Error", "Passwords don't match!");
         }
         else{
-            QMessageBox::information(this, "Success", "Login Successful");
+            QMessageBox::information(this, "Success", "Login Successful!");
         }
     });
 
-    QObject::connect(SignupButton, &QPushButton::clicked, [&](){
-        QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
-        screenChanger->setCurrentIndex(1);
-    });*/
+    QObject::connect(loginButton, &QPushButton::clicked, [&](){
+        QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
+        screenChanger->setCurrentIndex(0);
+    });
 }
