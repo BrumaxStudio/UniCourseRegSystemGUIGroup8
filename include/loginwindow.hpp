@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QMessageBox>
 
 class LoginWindow : public QWidget
 {
@@ -15,6 +16,8 @@ public:
     explicit LoginWindow(QWidget *parent = nullptr);
 
 private:
+    QLabel* rsuLogo;
+
     QLabel* loginMessage;
 
     QLabel* nameForLogin;

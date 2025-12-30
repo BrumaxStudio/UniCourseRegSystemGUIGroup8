@@ -4,6 +4,9 @@ project(UniCourseRegSystemGUIGroup8 VERSION 2025.12.30 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 if(LINUX)
     add_compile_options(
@@ -23,6 +26,8 @@ set(SRC_FILES
 )
 
 qt_standard_project_setup()
+
+qt_add_resources(SRC_FILES resources/uniCourseRegGroup8.qrc)
 
 qt_add_executable(${PROJECT_NAME}
     ${SRC_FILES}
