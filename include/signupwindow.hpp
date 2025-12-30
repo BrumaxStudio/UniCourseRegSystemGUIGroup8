@@ -23,19 +23,26 @@ private:
 
     QLabel* SigningLabel;
 
+    QLabel* rsuLogo;
+
     QLabel* first_name;
     QLabel* middle_name;
     QLabel* last_name;
 
-    QLineEdit firstNameLE;
-    QLineEdit middleNameLE;
-    QLineEdit lastNameLE;
+    QLineEdit* firstNameLE;
+    QLineEdit* middleNameLE;
+    QLineEdit* lastNameLE;
 
     QLabel* gender;
     QComboBox* gen;
 
     QLabel* department;
     QComboBox* dept;
+
+    QPushButton* loginButton;
+    QPushButton* SignupButton;
+
+    QHBoxLayout* loginORsignup;
 
     QHBoxLayout* firstNameLayout;
     QHBoxLayout* middleNameLayout;

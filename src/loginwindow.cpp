@@ -10,7 +10,6 @@ LoginWindow::LoginWindow(QStackedWidget* parentSW, QWidget *parent)
     loginMessage->setStyleSheet("color:yellow");
 
     rsuLogo = new QLabel(this);
-    //rsuLogo->resize(150, 150);
     rsuLogo->setPixmap(QPixmap(":/rsu_logo.jpg"));
     rsuLogo->setScaledContents(true);
 

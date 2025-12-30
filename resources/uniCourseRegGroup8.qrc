@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>rsu_logo.jpg</file>
+        <file>rsu_logo256.jpg</file>
     </qresource>
 </RCC>
