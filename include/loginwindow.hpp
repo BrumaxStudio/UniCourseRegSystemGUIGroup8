@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QString>
+#include <QComboBox>
 
 class LoginWindow : public QWidget
 {
@@ -28,8 +29,8 @@ private:
 
     QLabel* loginMessage;
 
-    QLabel* nameForLogin;
-    QLineEdit* entryForName;
+    QLabel* emailForLogin;
+    QLineEdit* entryForEmail;
 
     QLabel* passwordForLogin;
     QLineEdit* entryForPassword;
@@ -39,7 +40,11 @@ private:
 
     QHBoxLayout* loginORsignup;
 
-    QHBoxLayout* nameLayout;
+    QLabel* univer;
+    QComboBox* uni;
+    QHBoxLayout* uniLayout;
+
+    QHBoxLayout* emailLayout;
     QHBoxLayout* passwordLayout;
 
     QVBoxLayout* mainLayout;

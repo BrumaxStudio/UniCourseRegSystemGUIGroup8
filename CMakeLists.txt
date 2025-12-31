@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(UniCourseRegSystemGUIGroup8 VERSION 2025.12.30 LANGUAGES CXX)
+project(UniCourseRegSystemGUIGroup8 VERSION 2025.12.31 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -35,6 +35,7 @@ qt_add_resources(SRC_FILES resources/uniCourseRegGroup8.qrc)
 
 qt_add_executable(${PROJECT_NAME}
     ${SRC_FILES}
+    README.md
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

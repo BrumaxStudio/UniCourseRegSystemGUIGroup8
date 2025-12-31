@@ -44,6 +44,19 @@ private:
     QLabel* department;
     QComboBox* dept;
 
+    QLabel* email_add;
+    QLineEdit* em;
+
+    QLabel* phone_no;
+    QLineEdit* pn;
+
+    QHBoxLayout* emailLayout;
+    QHBoxLayout* phoneNoLayout;
+
+    QLabel* univer;
+    QComboBox* uni;
+    QHBoxLayout* uniLayout;
+
     QPushButton* loginButton;
     QPushButton* SignupButton;
 

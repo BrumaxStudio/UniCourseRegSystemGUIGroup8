@@ -79,6 +79,38 @@ SignupWindow::SignupWindow(QWidget *parent)
     dept->addItem("Petroleum");
     //Department
 
+    //University
+    univer = new QLabel(this);
+    univer->setText("University");
+    univer->setFont(QFont("Times"));
+    univer->setStyleSheet("color:gold");
+
+    uni = new QComboBox(this);
+    uni->addItem("Rivers State University");
+    //University
+
+    //Email and Phone No
+    email_add = new QLabel(this);
+    email_add->setText("Email");
+    email_add->setFont(QFont("Times"));
+    email_add->setStyleSheet("color:gold");
+
+    em = new QLineEdit(this);
+    em->setPlaceholderText("Required");
+    em->setFont(QFont("Times"));
+    em->setStyleSheet("color:gold");
+
+    phone_no = new QLabel(this);
+    phone_no->setText("Phone number");
+    phone_no->setFont(QFont("Times"));
+    phone_no->setStyleSheet("color:gold");
+
+    pn = new QLineEdit(this);
+    pn->setPlaceholderText("Required");
+    pn->setFont(QFont("Times"));
+    pn->setStyleSheet("color:gold");
+    //Email and Phone No
+
     //login and sign up
     loginButton = new QPushButton(this);
     loginButton->setText("Already have an account");
@@ -160,6 +192,22 @@ SignupWindow::SignupWindow(QWidget *parent)
     deptLayout->addWidget(dept);
     //DEPARTMENT  LAYOUT
 
+    //UNI LAYOUT
+    uniLayout = new QHBoxLayout;
+    uniLayout->addWidget(univer);
+    uniLayout->addWidget(uni);
+    //UNI LAYOUT
+
+    //EMAIL AND PHONE NUMBER
+    emailLayout = new QHBoxLayout;
+    emailLayout->addWidget(email_add);
+    emailLayout->addWidget(em);
+
+    phoneNoLayout = new QHBoxLayout;
+    phoneNoLayout->addWidget(phone_no);
+    phoneNoLayout->addWidget(pn);
+    //EMAIL AND PHONE NUMBER
+
     //MAIN LAYOUT
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(SigningLabel);
@@ -169,6 +217,9 @@ SignupWindow::SignupWindow(QWidget *parent)
     mainLayout->addLayout(lastNameLayout);
     mainLayout->addLayout(genderLayout);
     mainLayout->addLayout(deptLayout);
+    mainLayout->addLayout(uniLayout);
+    mainLayout->addLayout(emailLayout);
+    mainLayout->addLayout(phoneNoLayout);
     mainLayout->addLayout(passwordLayout1);
     mainLayout->addLayout(passwordLayout2);
     mainLayout->addLayout(loginORsignup);
