@@ -1,7 +1,7 @@
 #include "loginwindow.hpp"
 
-LoginWindow::LoginWindow(QStackedWidget* parentSW, QWidget *parent)
-    : QWidget{parent}, screenChanger(parentSW)
+LoginWindow::LoginWindow(QWidget *parent)
+    : QWidget{parent}
 {
     //Welcome label
     loginMessage = new QLabel(this);
@@ -80,11 +80,17 @@ LoginWindow::LoginWindow(QStackedWidget* parentSW, QWidget *parent)
         }
         else{
             QMessageBox::information(this, "Success", "Login Successful");
+            emit account_page();
         }
     });
 
     QObject::connect(SignupButton, &QPushButton::clicked, [&](){
         QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
-        screenChanger->setCurrentIndex(1);
+        emit signup_page();
     });
+}
+
+void LoginWindow::reset(){
+    entryForName->clear();
+    entryForPassword->clear();
 }

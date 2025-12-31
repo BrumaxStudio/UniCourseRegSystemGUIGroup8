@@ -1,7 +1,7 @@
 #include "signupwindow.hpp"
 
-SignupWindow::SignupWindow(QStackedWidget* parentSW, QWidget *parent)
-    : QWidget{parent}, screenChanger(parentSW)
+SignupWindow::SignupWindow(QWidget *parent)
+    : QWidget{parent}
 {
     //Welcome label
     SigningLabel = new QLabel(this);
@@ -193,12 +193,22 @@ SignupWindow::SignupWindow(QStackedWidget* parentSW, QWidget *parent)
             QMessageBox::warning(this, "Error", "Passwords don't match!");
         }
         else{
-            QMessageBox::information(this, "Success", "Login Successful!");
+            QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
+            emit account_page();
         }
     });
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){
         QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
-        screenChanger->setCurrentIndex(0);
+        emit login_page();
     });
+}
+
+void SignupWindow::reset(){
+    firstNameLE->clear();
+    middleNameLE->clear();
+    lastNameLE->clear();
+
+    pass1->clear();
+    pass2->clear();
 }

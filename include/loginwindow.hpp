@@ -9,17 +9,21 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QString>
-#include <QStackedWidget>
 
 class LoginWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit LoginWindow(QStackedWidget* parentSW, QWidget *parent = nullptr);
+    explicit LoginWindow(QWidget *parent = nullptr);
+
+signals:
+    void signup_page();
+    void account_page();
+
+public:
+    void reset();
 
 private:
-    QStackedWidget* screenChanger;
-
     QLabel* rsuLogo;
 
     QLabel* loginMessage;

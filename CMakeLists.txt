@@ -24,6 +24,8 @@ set(SRC_FILES
     src/loginwindow.cpp
     include/signupwindow.hpp
     src/signupwindow.cpp
+    include/unicouregsysgro8.hpp
+    src/unicouregsysgro8.cpp
     src/main.cpp
 )
 

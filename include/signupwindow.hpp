@@ -8,7 +8,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QStackedWidget>
 #include <QMessageBox>
 #include <QComboBox>
 #include <QString>
@@ -17,11 +16,16 @@ class SignupWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SignupWindow(QStackedWidget* parentSW, QWidget *parent = nullptr);
+    explicit SignupWindow(QWidget *parent = nullptr);
+
+signals:
+    void login_page();
+    void account_page();
+
+public:
+    void reset();
 
 private:
-    QStackedWidget* screenChanger;
-
     QLabel* SigningLabel;
 
     QLabel* rsuLogo;

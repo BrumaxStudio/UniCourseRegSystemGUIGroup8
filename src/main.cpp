@@ -1,6 +1,5 @@
 #include <QApplication>
-#include "loginwindow.hpp"
-#include "signupwindow.hpp"
+#include "unicouregsysgro8.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -9,19 +8,11 @@ int main(int argc, char *argv[])
     qInfo() << "RSU-CPE311";
     qInfo() << "Graphical User Interface designed using Qt6";
 
-    //Main window
-    QStackedWidget screenChanger;
+    UniCouRegSysGro8 window;
 
-    //Login Window
-    LoginWindow log(&screenChanger);
-    SignupWindow sig(&screenChanger);
-
-    screenChanger.addWidget(&log);
-    screenChanger.addWidget(&sig);
-
-    screenChanger.resize(800, 600);
-    screenChanger.setWindowTitle("University Course Registration System");
-    screenChanger.show();
+    window.resize(800, 600);
+    window.setWindowTitle("University Course Registration System - Group 8");
+    window.show();
 
     return app.exec();
 }
