@@ -26,6 +26,8 @@ set(SRC_FILES
     src/signupwindow.cpp
     include/unicouregsysgro8.hpp
     src/unicouregsysgro8.cpp
+    include/accountpagewindow.hpp
+    src/accountpagewindow.cpp
     src/main.cpp
 )
 

@@ -5,6 +5,7 @@
 #include <QStackedWidget>
 #include "loginwindow.hpp"
 #include "signupwindow.hpp"
+#include "accountpagewindow.hpp"
 
 class UniCouRegSysGro8 : public QMainWindow
 {
@@ -17,6 +18,7 @@ private:
 
     LoginWindow* log;
     SignupWindow* sig;
+    AccountPageWindow* acc;
 };
 
 #endif // UNICOUREGSYSGRO8_HPP

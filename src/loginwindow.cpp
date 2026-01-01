@@ -108,5 +108,6 @@ LoginWindow::LoginWindow(QWidget *parent)
 
 void LoginWindow::reset(){
     entryForEmail->clear();
+    uni->clear();
     entryForPassword->clear();
 }
