@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(UniCourseRegSystemGUIGroup8 VERSION 2025.12.31 LANGUAGES CXX)
+project(UniCourseRegSystemGUIGroup8 VERSION 2026.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
