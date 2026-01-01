@@ -35,7 +35,6 @@ qt_add_resources(SRC_FILES resources/uniCourseRegGroup8.qrc)
 
 qt_add_executable(${PROJECT_NAME}
     ${SRC_FILES}
-    README.md
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -48,10 +47,3 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i
 target_link_libraries(${PROJECT_NAME}
     PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui
 )
-
-#include(GNUInstallDirs)
-#install(TARGETS ${PROJECT_NAME}
-    #BUNDLE DESTINATION .
-    #LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#)
