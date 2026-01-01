@@ -79,6 +79,20 @@ SignupWindow::SignupWindow(QWidget *parent)
     dept->addItem("Petroleum");
     //Department
 
+    //Level
+    level = new QLabel(this);
+    level->setText("Level");
+    level->setFont(QFont("Times"));
+    level->setStyleSheet("color:gold");
+
+    lvl = new QComboBox(this);
+    lvl->addItem("100");
+    lvl->addItem("200");
+    lvl->addItem("300");
+    lvl->addItem("400");
+    lvl->addItem("500");
+    //Level
+
     //University
     univer = new QLabel(this);
     univer->setText("University");
@@ -208,6 +222,13 @@ SignupWindow::SignupWindow(QWidget *parent)
     phoneNoLayout->addWidget(pn);
     //EMAIL AND PHONE NUMBER
 
+    //LEVEL LAYOUT
+    levelLayout = new QHBoxLayout;
+    levelLayout->addWidget(level);
+    levelLayout->addWidget(lvl);
+    //LEVEL LAYOUT
+
+
     //MAIN LAYOUT
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(SigningLabel);
@@ -216,8 +237,9 @@ SignupWindow::SignupWindow(QWidget *parent)
     mainLayout->addLayout(middleNameLayout);
     mainLayout->addLayout(lastNameLayout);
     mainLayout->addLayout(genderLayout);
-    mainLayout->addLayout(deptLayout);
     mainLayout->addLayout(uniLayout);
+    mainLayout->addLayout(deptLayout);
+    mainLayout->addLayout(levelLayout);
     mainLayout->addLayout(emailLayout);
     mainLayout->addLayout(phoneNoLayout);
     mainLayout->addLayout(passwordLayout1);
@@ -234,10 +256,16 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString gen_v = gen->currentText();
         QString dept_v = dept->currentText();
 
+        QString level_v = lvl->currentText();
+        QString uni_v = uni->currentText();
+
+        QString email_v = em->text();
+        QString phone_no_v = pn->text();
+
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || gen_v.isEmpty() || dept_v.isEmpty()){
+        if(f_name.isEmpty() || l_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty()){
             QMessageBox::warning(this, "Error", "Incomplete Details!");
         }
         else if(password_1_v != password_2_v){
@@ -259,6 +287,14 @@ void SignupWindow::reset(){
     firstNameLE->clear();
     middleNameLE->clear();
     lastNameLE->clear();
+
+    gen->clear();
+    uni->clear();
+    dept->clear();
+    lvl->clear();
+
+    em->clear();
+    pn->clear();
 
     pass1->clear();
     pass2->clear();

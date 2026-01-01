@@ -44,6 +44,9 @@ private:
     QLabel* department;
     QComboBox* dept;
 
+    QLabel* level;
+    QComboBox* lvl;
+
     QLabel* email_add;
     QLineEdit* em;
 
@@ -76,6 +79,8 @@ private:
     QHBoxLayout* genderLayout;
 
     QHBoxLayout* deptLayout;
+
+    QHBoxLayout* levelLayout;
 
     QVBoxLayout* mainLayout;
 };
