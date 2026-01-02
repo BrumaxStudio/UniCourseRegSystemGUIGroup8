@@ -14,10 +14,11 @@ This project aims to make it easier for Rivers State University students to regi
 
 --- 
 
-*Building and Running:*
+## *Building and Running:*
+
 ```git clone --recursive-submodules git@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git```
 
-## *OR*
+### *OR*
 
 ```bash
 git clone it@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git
