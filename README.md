@@ -40,9 +40,6 @@ cmake --build . --config Release
 ---
 
 # *Acknowledgements:*
-This project uses the following Qt6 libraries:
-+ Qt6::Core
-+ Qt6::Widgets
-+ Qt6::Gui
-
-All under the GNU LGPL License
+This project uses the following libraries:
++ Qt6 - LGPL
++ Bcrypt.cpp - BSD 4-Clause
