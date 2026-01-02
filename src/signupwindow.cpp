@@ -274,19 +274,16 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, password_1_v, password_2_v](std::stop_token st){
+            hash_thread = std::jthread([self, password_1_v](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
 
-                //qInfo() << "Check 1";
                 auto start = std::chrono::high_resolution_clock::now();
                 QString pass_hash = QString::fromStdString(bcrypt::generateHash(password_1_v.toStdString(), 14));
-                QString pass_hash_2 = QString::fromStdString(bcrypt::generateHash(password_2_v.toStdString(), 14));
                 auto end = std::chrono::high_resolution_clock::now();
 
                 std::chrono::duration<double> elapse = end - start;
-                //qInfo() << "Check 2";
 
                 bool val = bcrypt::validatePassword(password_1_v.toStdString(), pass_hash.toStdString());
                 if(val) qDebug() << "Password validation: " << "true";
@@ -295,7 +292,6 @@ SignupWindow::SignupWindow(QWidget *parent)
                 QString message = "Hashing password took " + QString::number(elapse.count()) + " seconds";
 
                 QMetaObject::invokeMethod(self, [self, message, pass_hash]{
-                //qInfo() << "Check 3";
                     if(!self) return;
                     QMessageBox::information(self, "Task Complete", message);
                 }, Qt::QueuedConnection);
