@@ -3,7 +3,7 @@
 This project aims to make it easier for Rivers State University students to register their courses anywhere they are located.
 
 ---
-<img src = "resources/creg8-ui.png" width = 600 height = 450>
+![Image](resources/creg8-ui.png)
 
 ---
 
@@ -15,8 +15,19 @@ This project aims to make it easier for Rivers State University students to regi
 --- 
 
 *Building and Running:*
+```git clone --recursive-submodules git@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git```
+
+## *OR*
+
 ```bash
-git clone git@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git
+git clone it@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git
+cd UniCourseRegSystemGUIGroup8
+git submodule update --init --recursive
+```
+
+Then
+
+```bash
 cd UniCourseRegSystemGUIGroup8
 mkdir build
 cd build

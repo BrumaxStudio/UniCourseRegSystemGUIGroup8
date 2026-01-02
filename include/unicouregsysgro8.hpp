@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QCloseEvent>
+#include <QCoreApplication>
+
 #include "loginwindow.hpp"
 #include "signupwindow.hpp"
 #include "accountpagewindow.hpp"

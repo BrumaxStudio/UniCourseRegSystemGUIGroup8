@@ -265,16 +265,46 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty()){
+        if(f_name.isEmpty() || l_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty()){
             QMessageBox::warning(this, "Error", "Incomplete Details!");
         }
         else if(password_1_v != password_2_v){
             QMessageBox::warning(this, "Error", "Passwords don't match!");
         }
         else{
+            QPointer<SignupWindow> self(this);
+
+            hash_thread = std::jthread([self, password_1_v, password_2_v](std::stop_token st){
+                if(st.stop_requested()) return;
+
+                if(!self) return;
+
+                //qInfo() << "Check 1";
+                auto start = std::chrono::high_resolution_clock::now();
+                QString pass_hash = QString::fromStdString(bcrypt::generateHash(password_1_v.toStdString(), 14));
+                QString pass_hash_2 = QString::fromStdString(bcrypt::generateHash(password_2_v.toStdString(), 14));
+                auto end = std::chrono::high_resolution_clock::now();
+
+                std::chrono::duration<double> elapse = end - start;
+                //qInfo() << "Check 2";
+
+                bool val = bcrypt::validatePassword(password_1_v.toStdString(), pass_hash.toStdString());
+                if(val) qDebug() << "Password validation: " << "true";
+                else qDebug() << "Password validation: " << "false";
+
+                QString message = "Hashing password took " + QString::number(elapse.count()) + " seconds";
+
+                QMetaObject::invokeMethod(self, [self, message, pass_hash]{
+                //qInfo() << "Check 3";
+                    if(!self) return;
+                    QMessageBox::information(self, "Task Complete", message);
+                }, Qt::QueuedConnection);
+            });
+
             QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
             emit account_page();
         }
+
     });
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){

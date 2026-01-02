@@ -8,16 +8,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-if(LINUX)
-    add_compile_options(
-        -Wall
-        -Wextra
-        -Werror
-        -Wpedantic
-    )
-endif(LINUX)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+
+add_subdirectory(third_party/Bcrypt.cpp)
 
 set(SRC_FILES
     include/loginwindow.hpp
@@ -39,6 +32,17 @@ qt_add_executable(${PROJECT_NAME}
     ${SRC_FILES}
 )
 
+if(LINUX)
+    target_compile_options(${PROJECT_NAME}
+        PRIVATE
+        -Wall
+        -Wextra
+        -Wno-error=format
+        -Werror
+        -Wpedantic
+    )
+endif(LINUX)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
@@ -47,5 +51,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui
+    PRIVATE
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::Gui
+    bcrypt
 )

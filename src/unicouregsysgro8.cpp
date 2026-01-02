@@ -14,7 +14,6 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
 
     this->setCentralWidget(screenChanger);
 
-    //screenChanger->se
     //Resets page and redirects page to the account page
     QObject::connect(log, &LoginWindow::account_page, this, [this](){
         log->reset();

@@ -11,6 +11,12 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <QString>
+#include <QPointer>
+
+#include <thread>
+#include <chrono>
+
+#include "bcrypt.h"
 
 class SignupWindow : public QWidget
 {
@@ -26,6 +32,8 @@ public:
     void reset();
 
 private:
+    std::jthread hash_thread;
+
     QLabel* SigningLabel;
 
     QLabel* rsuLogo;
