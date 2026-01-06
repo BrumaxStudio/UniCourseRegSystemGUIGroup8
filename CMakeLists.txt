@@ -11,6 +11,7 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_subdirectory(third_party/Bcrypt.cpp)
+add_subdirectory(third_party/json)
 
 set(SRC_FILES
     include/loginwindow.hpp
@@ -56,4 +57,5 @@ target_link_libraries(${PROJECT_NAME}
     Qt6::Widgets
     Qt6::Gui
     bcrypt
+    nlohmann_json
 )

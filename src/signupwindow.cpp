@@ -274,7 +274,7 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, password_1_v](std::stop_token st){
+            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, gen_v, dept_v, level_v, email_v, phone_no_v](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
@@ -290,6 +290,25 @@ SignupWindow::SignupWindow(QWidget *parent)
                 else qDebug() << "Password validation: " << "false";
 
                 QString message = "Hashing password took " + QString::number(elapse.count()) + " seconds";
+
+                using namespace nlohmann::literals;
+                auto jrr = self->json_reader;
+
+                jrr["first_name"] = f_name.toStdString();
+                jrr["middle_name"] = m_name.toStdString();
+                jrr["last_name"] = l_name.toStdString();
+
+                jrr["sex"] = gen_v.toStdString();
+                jrr["dept"] = dept_v.toStdString();
+                jrr["level"] = level_v.toStdString();
+                jrr["email"] = email_v.toStdString();
+                jrr["phone_no"] = phone_no_v.toStdString();
+
+                std::ofstream file("User.json");
+                file << std::setw(4) << jrr;
+                file.close();
+
+                QByteArray sendQB = QByteArray::fromStdString(jrr.dump());
 
                 QMetaObject::invokeMethod(self, [self, message, pass_hash]{
                     if(!self) return;

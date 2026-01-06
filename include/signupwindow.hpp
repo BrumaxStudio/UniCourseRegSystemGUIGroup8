@@ -15,8 +15,10 @@
 
 #include <thread>
 #include <chrono>
+#include <fstream>
 
 #include "bcrypt.h"
+#include "nlohmann/json.hpp"
 
 class SignupWindow : public QWidget
 {
@@ -33,6 +35,7 @@ public:
 
 private:
     std::jthread hash_thread;
+    nlohmann::json json_reader;
 
     QLabel* SigningLabel;
 

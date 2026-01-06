@@ -45,3 +45,4 @@ cmake --build . --config Release
 This project uses the following libraries:
 + Qt6 - LGPL
 + Bcrypt.cpp - BSD 4-Clause
++ Nlohmann/Json - MIT License
