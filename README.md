@@ -26,13 +26,15 @@ cd UniCourseRegSystemGUIGroup8
 git submodule update --init --recursive
 ```
 
+## *[Download Qt6 Libraries for your platform](https://doc.qt.io/qt-6/get-and-install-qt.html)*
+
 Then
 
 ```bash
 cd UniCourseRegSystemGUIGroup8
 mkdir build
 cd build
-cmake .. 
+cmake .. -DCMAKE_PREFIX_PATH="path/to/Qt/versionNumber/yourCompilerName"
 cmake --build . --config Release
 ./UniCourseRegSystemGUIGroup8
 ```
