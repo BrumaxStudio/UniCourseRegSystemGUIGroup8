@@ -11,7 +11,7 @@ SignupWindow::SignupWindow(QWidget *parent)
     //Welcome label
 
     rsuLogo = new QLabel(this);
-    rsuLogo->setPixmap(QPixmap(":/rsu_logo256.jpg"));
+    rsuLogo->setPixmap(QPixmap(":/rsu_logo128.jpg"));
     rsuLogo->setScaledContents(true);
 
     //First name - required

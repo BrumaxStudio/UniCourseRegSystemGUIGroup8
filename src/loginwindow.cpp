@@ -10,7 +10,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     loginMessage->setStyleSheet("color:yellow");
 
     rsuLogo = new QLabel(this);
-    rsuLogo->setPixmap(QPixmap(":/rsu_logo256.jpg"));
+    rsuLogo->setPixmap(QPixmap(":/rsu_logo128.jpg"));
     rsuLogo->setScaledContents(true);
 
     //Username
