@@ -11,6 +11,10 @@
 #include <QString>
 #include <QComboBox>
 
+#include <bcrypt.h>
+#include <httplib.h>
+#include <nlohmann/json.hpp>
+
 class LoginWindow : public QWidget
 {
     Q_OBJECT
@@ -25,12 +29,14 @@ public:
     void reset();
 
 private:
+    nlohmann::json reader_json;
+
     QLabel* rsuLogo;
 
     QLabel* loginMessage;
 
-    QLabel* emailForLogin;
-    QLineEdit* entryForEmail;
+    QLabel* userNameForLogin;
+    QLineEdit* entryForUserName;
 
     QLabel* passwordForLogin;
     QLineEdit* entryForPassword;
@@ -44,7 +50,7 @@ private:
     QComboBox* uni;
     QHBoxLayout* uniLayout;
 
-    QHBoxLayout* emailLayout;
+    QHBoxLayout* UserNameLayout;
     QHBoxLayout* passwordLayout;
 
     QVBoxLayout* mainLayout;

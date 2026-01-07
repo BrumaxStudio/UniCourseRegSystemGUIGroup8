@@ -19,6 +19,7 @@
 
 #include "bcrypt.h"
 #include "nlohmann/json.hpp"
+#include "httplib.h"
 
 class SignupWindow : public QWidget
 {
@@ -70,6 +71,10 @@ private:
     QLabel* univer;
     QComboBox* uni;
     QHBoxLayout* uniLayout;
+
+    QLabel* userName;
+    QLineEdit* un;
+    QHBoxLayout* userNameLayout;
 
     QPushButton* loginButton;
     QPushButton* SignupButton;

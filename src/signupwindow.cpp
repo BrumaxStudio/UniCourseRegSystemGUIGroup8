@@ -50,6 +50,18 @@ SignupWindow::SignupWindow(QWidget *parent)
     lastNameLE->setStyleSheet("color:gold");
     //last name - required
 
+    //Username
+    userName = new QLabel(this);
+    userName->setText("Username");
+    userName->setFont(QFont("Times"));
+    userName->setStyleSheet("color:gold");
+
+    un = new QLineEdit(this);
+    un->setPlaceholderText("Required");
+    un->setFont(QFont("Times"));
+    un->setStyleSheet("color:gold");
+    //Username
+
     //Gender/Sex
     gender = new QLabel(this);
     gender->setText("Select your gender");
@@ -194,6 +206,12 @@ SignupWindow::SignupWindow(QWidget *parent)
     lastNameLayout->addWidget(lastNameLE);
     //LAST NAME LAYOUT
 
+    //USERNAME LAYOUT
+    userNameLayout = new QHBoxLayout;
+    userNameLayout->addWidget(userName);
+    userNameLayout->addWidget(un);
+    //USERNAME LAYOUT
+
     //GENDER LAYOUT
     genderLayout = new QHBoxLayout;
     genderLayout->addWidget(gender);
@@ -236,6 +254,7 @@ SignupWindow::SignupWindow(QWidget *parent)
     mainLayout->addLayout(firstNameLayout);
     mainLayout->addLayout(middleNameLayout);
     mainLayout->addLayout(lastNameLayout);
+    mainLayout->addLayout(userNameLayout);
     mainLayout->addLayout(genderLayout);
     mainLayout->addLayout(uniLayout);
     mainLayout->addLayout(deptLayout);
@@ -253,6 +272,8 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString m_name = middleNameLE->text();
         QString l_name = lastNameLE->text();
 
+        QString user_name = un->text();
+
         QString gen_v = gen->currentText();
         QString dept_v = dept->currentText();
 
@@ -265,8 +286,13 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty()){
-            QMessageBox::warning(this, "Error", "Incomplete Details!");
+        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty()){
+            if(std::isdigit(phone_no_v.toLongLong())){
+                QMessageBox::warning(this, "Error", "Enter digits as your phone number!");
+            }
+            else{
+                QMessageBox::warning(this, "Error", "Incomplete Details!");
+            }
         }
         else if(password_1_v != password_2_v){
             QMessageBox::warning(this, "Error", "Passwords don't match!");
@@ -274,7 +300,7 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, gen_v, dept_v, level_v, email_v, phone_no_v](std::stop_token st){
+            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
@@ -294,21 +320,46 @@ SignupWindow::SignupWindow(QWidget *parent)
                 using namespace nlohmann::literals;
                 auto jrr = self->json_reader;
 
-                jrr["first_name"] = f_name.toStdString();
-                jrr["middle_name"] = m_name.toStdString();
-                jrr["last_name"] = l_name.toStdString();
-
-                jrr["sex"] = gen_v.toStdString();
-                jrr["dept"] = dept_v.toStdString();
-                jrr["level"] = level_v.toStdString();
-                jrr["email"] = email_v.toStdString();
-                jrr["phone_no"] = phone_no_v.toStdString();
+                jrr = {
+                    {"users", {
+                        {"user_name", user_name.toStdString()},
+                        {"hashed_password", pass_hash.toStdString()},
+                        {"role", "student"}
+                    }},
+                    {"student",{
+                        {"first_name", f_name.toStdString()},
+                        {"middle_name", m_name.toStdString()},
+                        {"last_name", l_name.toStdString()},
+                        {"sex", gen_v.toStdString()},
+                        {"dept", dept_v.toStdString()},
+                        {"level", level_v.toStdString()},
+                        {"email", email_v.toStdString()},
+                        {"phone_no", phone_no_v.toLongLong()},
+                        {"user_name", user_name.toStdString()},
+                        {"school_id", 100001}
+                    }}
+                };
 
                 std::ofstream file("User.json");
                 file << std::setw(4) << jrr;
                 file.close();
 
-                QByteArray sendQB = QByteArray::fromStdString(jrr.dump());
+                httplib::Client client("localhost", 8080);
+
+                if(auto response = client.Post("/register", jrr.dump(), "application/json")){
+                    if(response->status == 200){
+                        auto serverResponse = nlohmann::json::parse(response->body);
+                        std::cout << "Success: " << serverResponse["message"] << std::endl;
+                    }
+                    else{
+                        std::cerr << "HTTP error: " << response->status << std::endl;
+                    }
+                }
+                else{
+                    auto error = response.error();
+                    std::cerr << "Connection Error: " << static_cast<int>(error) << std::endl;
+                }
+
 
                 QMetaObject::invokeMethod(self, [self, message, pass_hash]{
                     if(!self) return;

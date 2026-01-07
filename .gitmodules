@@ -4,3 +4,6 @@
 [submodule "third_party/json"]
 	path = third_party/json
 	url = git@github.com:lil-brumski/json.git
+[submodule "third_party/cpp-httplib"]
+	path = third_party/cpp-httplib
+	url = git@github.com:lil-brumski/cpp-httplib.git

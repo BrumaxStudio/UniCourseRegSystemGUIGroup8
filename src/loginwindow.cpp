@@ -14,15 +14,15 @@ LoginWindow::LoginWindow(QWidget *parent)
     rsuLogo->setScaledContents(true);
 
     //Username
-    emailForLogin = new QLabel(this);
-    emailForLogin->setText("Email");
-    emailForLogin->setFont(QFont("Times"));
-    emailForLogin->setStyleSheet("color:gold");
+    userNameForLogin = new QLabel(this);
+    userNameForLogin->setText("Username");
+    userNameForLogin->setFont(QFont("Times"));
+    userNameForLogin->setStyleSheet("color:gold");
 
-    entryForEmail = new QLineEdit(this);
-    entryForEmail->setPlaceholderText("Enter your username");
-    entryForEmail->setFont(QFont("Times"));
-    entryForEmail->setStyleSheet("color:gold");
+    entryForUserName = new QLineEdit(this);
+    entryForUserName->setPlaceholderText("Enter your username");
+    entryForUserName->setFont(QFont("Times"));
+    entryForUserName->setStyleSheet("color:gold");
     //Username
 
     //Password
@@ -59,9 +59,9 @@ LoginWindow::LoginWindow(QWidget *parent)
     //Pushbutton - signup
 
     //NAME LAYOUT
-    emailLayout = new QHBoxLayout;
-    emailLayout->addWidget(emailForLogin);
-    emailLayout->addWidget(entryForEmail);
+    UserNameLayout = new QHBoxLayout;
+    UserNameLayout->addWidget(userNameForLogin);
+    UserNameLayout->addWidget(entryForUserName);
 
     //NAME LAYOUT
     passwordLayout = new QHBoxLayout;
@@ -81,14 +81,14 @@ LoginWindow::LoginWindow(QWidget *parent)
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(loginMessage);
     mainLayout->addWidget(rsuLogo);
-    mainLayout->addLayout(emailLayout);
+    mainLayout->addLayout(UserNameLayout);
     mainLayout->addLayout(uniLayout);
     mainLayout->addLayout(passwordLayout);
     mainLayout->addLayout(loginORsignup);
     this->setLayout(mainLayout);
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){
-        QString username = entryForEmail->text();
+        QString username = entryForUserName->text();
         QString password = entryForPassword->text();
 
         if(username.isEmpty() || password.isEmpty()){
@@ -107,7 +107,7 @@ LoginWindow::LoginWindow(QWidget *parent)
 }
 
 void LoginWindow::reset(){
-    entryForEmail->clear();
+    entryForUserName->clear();
     uni->clear();
     entryForPassword->clear();
 }
