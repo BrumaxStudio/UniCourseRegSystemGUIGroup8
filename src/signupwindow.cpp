@@ -105,6 +105,18 @@ SignupWindow::SignupWindow(QWidget *parent)
     lvl->addItem("500");
     //Level
 
+    //Mat NO
+    matricNO = new QLabel(this);
+    matricNO->setText("Matriculation Number");
+    matricNO->setFont(QFont("Times"));
+    matricNO->setStyleSheet("color:gold");
+
+    mn = new QLineEdit(this);
+    mn->setPlaceholderText("Enter the four digits in your MAT. NO.");
+    mn->setFont(QFont("Times"));
+    mn->setStyleSheet("color:gold");
+    //Mat NO
+
     //University
     univer = new QLabel(this);
     univer->setText("University");
@@ -246,6 +258,11 @@ SignupWindow::SignupWindow(QWidget *parent)
     levelLayout->addWidget(lvl);
     //LEVEL LAYOUT
 
+    //MATRIC NUMBER
+    mnLayout = new QHBoxLayout;
+    mnLayout->addWidget(matricNO);
+    mnLayout->addWidget(mn);
+    //MATRIC NUMBER
 
     //MAIN LAYOUT
     mainLayout = new QVBoxLayout;
@@ -259,6 +276,7 @@ SignupWindow::SignupWindow(QWidget *parent)
     mainLayout->addLayout(uniLayout);
     mainLayout->addLayout(deptLayout);
     mainLayout->addLayout(levelLayout);
+    mainLayout->addLayout(mnLayout);
     mainLayout->addLayout(emailLayout);
     mainLayout->addLayout(phoneNoLayout);
     mainLayout->addLayout(passwordLayout1);
@@ -277,8 +295,21 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString gen_v = gen->currentText();
         QString dept_v = dept->currentText();
 
-        QString level_v = lvl->currentText();
+        int level_v = 0;
+
+        try{
+            level_v = /*std::stoi(*/lvl->currentText().toInt();//(//.toStdString());
+        }
+        catch(const std::exception& error){
+            std::cerr << "Error in converting level to an INT" << std::endl;
+        }
+
         QString uni_v = uni->currentText();
+
+        QString mat_no = "";
+
+        mat_no = (level_v == 100)? "DE.2025/": (level_v == 200)? "DE.2024/": (level_v == 300)? "DE.2023/": (level_v == 400)? "DE.2022/": (level_v == 500)? "DE.2021/": "UNKNOWN";
+        mat_no += QString::number(mn->text().toInt());
 
         QString email_v = em->text();
         QString phone_no_v = pn->text();
@@ -300,7 +331,7 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v](std::stop_token st){
+            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
@@ -323,16 +354,17 @@ SignupWindow::SignupWindow(QWidget *parent)
                 jrr = {
                     {"users", {
                         {"user_name", user_name.toStdString()},
-                        {"hashed_password", pass_hash.toStdString()},
+                        //{"hashed_password", pass_hash.toStdString()},
                         {"role", "student"}
                     }},
                     {"student",{
+                        {"mat_no", mat_no.toStdString()},
                         {"first_name", f_name.toStdString()},
                         {"middle_name", m_name.toStdString()},
                         {"last_name", l_name.toStdString()},
                         {"sex", gen_v.toStdString()},
                         {"dept", dept_v.toStdString()},
-                        {"level", level_v.toStdString()},
+                        {"level", level_v},
                         {"email", email_v.toStdString()},
                         {"phone_no", phone_no_v.toLongLong()},
                         {"user_name", user_name.toStdString()},

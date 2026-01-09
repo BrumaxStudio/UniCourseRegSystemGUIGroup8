@@ -59,6 +59,10 @@ private:
     QLabel* level;
     QComboBox* lvl;
 
+    QLabel* matricNO;
+    QLineEdit* mn;
+    QHBoxLayout* mnLayout;
+
     QLabel* email_add;
     QLineEdit* em;
 
