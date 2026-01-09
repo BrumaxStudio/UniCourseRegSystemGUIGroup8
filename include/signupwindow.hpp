@@ -20,6 +20,7 @@
 #include "bcrypt.h"
 #include "nlohmann/json.hpp"
 #include "httplib.h"
+#include "termcolor/termcolor.hpp"
 
 class SignupWindow : public QWidget
 {

@@ -301,7 +301,7 @@ SignupWindow::SignupWindow(QWidget *parent)
             level_v = /*std::stoi(*/lvl->currentText().toInt();//(//.toStdString());
         }
         catch(const std::exception& error){
-            std::cerr << "Error in converting level to an INT" << std::endl;
+            std::cerr << termcolor::red << "Error in converting level to an INT" << termcolor::reset << std::endl;
         }
 
         QString uni_v = uni->currentText();
@@ -331,25 +331,13 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, password_1_v, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
+            hash_thread = std::jthread([self, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
 
-                auto start = std::chrono::high_resolution_clock::now();
-                QString pass_hash = QString::fromStdString(bcrypt::generateHash(password_1_v.toStdString(), 14));
-                auto end = std::chrono::high_resolution_clock::now();
-
-                std::chrono::duration<double> elapse = end - start;
-
-                bool val = bcrypt::validatePassword(password_1_v.toStdString(), pass_hash.toStdString());
-                if(val) qDebug() << "Password validation: " << "true";
-                else qDebug() << "Password validation: " << "false";
-
-                QString message = "Hashing password took " + QString::number(elapse.count()) + " seconds";
-
-                using namespace nlohmann::literals;
                 auto jrr = self->json_reader;
+                auto passJson = self->pass1;
 
                 jrr = {
                     {"users", {
@@ -369,38 +357,48 @@ SignupWindow::SignupWindow(QWidget *parent)
                         {"phone_no", phone_no_v.toLongLong()},
                         {"user_name", user_name.toStdString()},
                         {"school_id", 100001}
+                    }},
+                    {"raw", {
+                        {"password", passJson->text().toStdString()}
                     }}
                 };
-
-                std::ofstream file("User.json");
-                file << std::setw(4) << jrr;
-                file.close();
 
                 httplib::Client client("localhost", 8080);
 
                 if(auto response = client.Post("/register", jrr.dump(), "application/json")){
+                    auto serverResponse = nlohmann::json::parse(response->body);
+
                     if(response->status == 200){
-                        auto serverResponse = nlohmann::json::parse(response->body);
-                        std::cout << "Success: " << serverResponse["message"] << std::endl;
+                        std::cout << termcolor::green << "Status: " << serverResponse["status"] << termcolor::reset << std::endl;
+                        std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
+
+                        QMetaObject::invokeMethod(self, [self](){
+                            if(!self) return;
+                            QMessageBox::information(self, "Success", "Successfully created account, redirecting page now...");
+                            emit self->account_page();
+                        }, Qt::QueuedConnection);
                     }
                     else{
-                        std::cerr << "HTTP error: " << response->status << std::endl;
+                        std::cerr << termcolor::red << "HTTP error: " << response->status << termcolor::reset << std::endl;
+                        std::cerr << termcolor::red << "Status: " << serverResponse["message"] << termcolor::reset << std::endl;
+
+                        QMetaObject::invokeMethod(self, [self](){
+                            if(!self) return;
+                            QMessageBox::information(self, "Error", "Failed to create account");
+                        }, Qt::QueuedConnection);
                     }
                 }
                 else{
                     auto error = response.error();
-                    std::cerr << "Connection Error: " << static_cast<int>(error) << std::endl;
+                    auto errorMessage = "Connection Error: " + std::to_string(static_cast<int>(error));
+                    std::cerr << termcolor::red << errorMessage << termcolor::reset << std::endl;
+
+                    QMetaObject::invokeMethod(self, [self, errorMessage](){
+                        if(!self) return;
+                        QMessageBox::information(self, "Error", QString::fromStdString(errorMessage));
+                    }, Qt::QueuedConnection);
                 }
-
-
-                QMetaObject::invokeMethod(self, [self, message, pass_hash]{
-                    if(!self) return;
-                    QMessageBox::information(self, "Task Complete", message);
-                }, Qt::QueuedConnection);
             });
-
-            QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
-            emit account_page();
         }
 
     });

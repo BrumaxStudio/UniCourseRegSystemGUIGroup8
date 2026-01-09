@@ -1,12 +1,13 @@
 #include <QApplication>
 #include "unicouregsysgro8.hpp"
+#include "termcolor/termcolor.hpp"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    qInfo() << "Database Project";
-    qInfo() << "RSU-CPE311";
-    qInfo() << "Graphical User Interface designed using Qt6";
+    std::cout << termcolor::green << "Database Project" << termcolor::reset << std::endl;
+    std::cout << termcolor::green << "RSU-CPE311" << termcolor::reset << std::endl;
+    std::cout << termcolor::green << "Graphical User Interface designed using Qt6" << termcolor::reset << std::endl;
 
     UniCouRegSysGro8 window;
 

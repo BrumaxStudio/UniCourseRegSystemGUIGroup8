@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 4.0)
 
 project(creg8-gui VERSION 2026.1.9 LANGUAGES CXX)
 
@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_BUILD_PARALLEL 8)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
