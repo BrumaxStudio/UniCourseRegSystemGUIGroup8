@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 
-project(creg8-gui VERSION 2026.1.9 LANGUAGES CXX)
+project(creg8-gui VERSION 2026.1.11 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,11 +9,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_BUILD_PARALLEL 8)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network)
 
-add_subdirectory(third_party/Bcrypt.cpp)
 add_subdirectory(third_party/json)
-add_subdirectory(third_party/cpp-httplib)
 add_subdirectory(third_party/termcolor)
 
 set(SRC_FILES
@@ -58,8 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     Qt6::Core
     Qt6::Widgets
     Qt6::Gui
-    bcrypt
+    Qt6::Network
     nlohmann_json
-    httplib
     termcolor
 )
