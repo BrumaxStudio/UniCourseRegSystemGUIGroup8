@@ -12,14 +12,16 @@
 #include <QComboBox>
 #include <QString>
 #include <QPointer>
+#include <QByteArray>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 #include <thread>
 #include <chrono>
 #include <fstream>
 
-#include "bcrypt.h"
 #include "nlohmann/json.hpp"
-#include "httplib.h"
 #include "termcolor/termcolor.hpp"
 
 class SignupWindow : public QWidget

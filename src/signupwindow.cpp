@@ -331,10 +331,11 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             QPointer<SignupWindow> self(this);
 
-            hash_thread = std::jthread([self, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
+            /*hash_thread = std::jthread([self, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
                 if(st.stop_requested()) return;
 
                 if(!self) return;
+            */
 
                 auto jrr = self->json_reader;
                 auto passJson = self->pass1;
@@ -363,6 +364,41 @@ SignupWindow::SignupWindow(QWidget *parent)
                     }}
                 };
 
+                //for transferring the json data to the server
+                QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
+                //can only transfer raw bytes
+                QByteArray data = QByteArray::fromStdString(jrr.dump());
+
+                //envelope for sending request
+                QNetworkRequest request(QUrl("http://localhost:8080/register"));
+                //request type
+                request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+                //object for receiving the server's reply
+                QNetworkReply* reply = clientApp->post(request, data);
+
+                //does stuff when the server replies
+                QObject::connect(reply, &QNetworkReply::finished, self, [self, reply]{
+                    //gets connection code
+                    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+                    //checks if an error was returned and if the status code is equal to 200
+                    if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
+                        auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                        std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
+
+                        QMessageBox::information(self, "Success", "Successfully created account, redirecting page now...");
+                        emit self->account_page();
+                    }
+                    else{
+                        std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;                   
+                        QMessageBox::information(self, "Error", "Failed to create account");
+                    }
+
+                    reply->deleteLater();
+                });
+
+                /*
                 httplib::Client client("localhost", 8080);
 
                 if(auto response = client.Post("/register", jrr.dump(), "application/json")){
@@ -397,15 +433,10 @@ SignupWindow::SignupWindow(QWidget *parent)
                         if(!self) return;
                         QMessageBox::information(self, "Error", QString::fromStdString(errorMessage));
                     }, Qt::QueuedConnection);
-                }
-            });
+                }*/
+            //});
         }
 
-    });
-
-    QObject::connect(loginButton, &QPushButton::clicked, [&](){
-        QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
-        emit login_page();
     });
 }
 

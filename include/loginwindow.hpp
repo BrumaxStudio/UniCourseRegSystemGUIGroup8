@@ -11,8 +11,6 @@
 #include <QString>
 #include <QComboBox>
 
-#include <bcrypt.h>
-#include <httplib.h>
 #include <nlohmann/json.hpp>
 
 class LoginWindow : public QWidget
