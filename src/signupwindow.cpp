@@ -317,8 +317,8 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty()){
-            if(std::isdigit(phone_no_v.toLongLong())){
+        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || !std::isdigit(phone_no_v.toLongLong())){
+            if(!std::isdigit(phone_no_v.toLongLong())){
                 QMessageBox::warning(this, "Error", "Enter digits as your phone number!");
             }
             else{
@@ -329,112 +329,62 @@ SignupWindow::SignupWindow(QWidget *parent)
             QMessageBox::warning(this, "Error", "Passwords don't match!");
         }
         else{
-            QPointer<SignupWindow> self(this);
+            json_reader = {
+                {"users", {
+                    {"user_name", user_name.toStdString()},
+                    {"role", "student"}
+                }},
+                {"student",{
+                    {"mat_no", mat_no.toStdString()},
+                    {"first_name", f_name.toStdString()},
+                    {"middle_name", m_name.toStdString()},
+                    {"last_name", l_name.toStdString()},
+                    {"sex", gen_v.toStdString()},
+                    {"dept", dept_v.toStdString()},
+                    {"level", level_v},
+                    {"email", email_v.toStdString()},
+                    {"phone_no", phone_no_v.toLongLong()},
+                    {"user_name", user_name.toStdString()},
+                    {"school_id", 100001}
+                }},
+                {"raw", {
+                    {"password", pass1->text().toStdString()}
+                }}
+            };
 
-            /*hash_thread = std::jthread([self, f_name, m_name, l_name, user_name, gen_v, dept_v, level_v, email_v, phone_no_v, mat_no](std::stop_token st){
-                if(st.stop_requested()) return;
+            //for transferring the json data to the server
+            QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
+            //can only transfer raw bytes
+            QByteArray data = QByteArray::fromStdString(json_reader.dump());
 
-                if(!self) return;
-            */
+            //envelope for sending request
+            QNetworkRequest request(QUrl("http://localhost:8080/register"));
+            //request type
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-                auto jrr = self->json_reader;
-                auto passJson = self->pass1;
+            //object for receiving the server's reply
+            QNetworkReply* reply = clientApp->post(request, data);
 
-                jrr = {
-                    {"users", {
-                        {"user_name", user_name.toStdString()},
-                        //{"hashed_password", pass_hash.toStdString()},
-                        {"role", "student"}
-                    }},
-                    {"student",{
-                        {"mat_no", mat_no.toStdString()},
-                        {"first_name", f_name.toStdString()},
-                        {"middle_name", m_name.toStdString()},
-                        {"last_name", l_name.toStdString()},
-                        {"sex", gen_v.toStdString()},
-                        {"dept", dept_v.toStdString()},
-                        {"level", level_v},
-                        {"email", email_v.toStdString()},
-                        {"phone_no", phone_no_v.toLongLong()},
-                        {"user_name", user_name.toStdString()},
-                        {"school_id", 100001}
-                    }},
-                    {"raw", {
-                        {"password", passJson->text().toStdString()}
-                    }}
-                };
+            //does stuff when the server replies
+            QObject::connect(reply, &QNetworkReply::finished, this, [this, reply]{
+                //gets connection code
+                int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-                //for transferring the json data to the server
-                QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
-                //can only transfer raw bytes
-                QByteArray data = QByteArray::fromStdString(jrr.dump());
+                //checks if an error was returned and if the status code is equal to 200
+                if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
+                    auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
 
-                //envelope for sending request
-                QNetworkRequest request(QUrl("http://localhost:8080/register"));
-                //request type
-                request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-                //object for receiving the server's reply
-                QNetworkReply* reply = clientApp->post(request, data);
-
-                //does stuff when the server replies
-                QObject::connect(reply, &QNetworkReply::finished, self, [self, reply]{
-                    //gets connection code
-                    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-                    //checks if an error was returned and if the status code is equal to 200
-                    if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
-                        auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                        std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
-
-                        QMessageBox::information(self, "Success", "Successfully created account, redirecting page now...");
-                        emit self->account_page();
-                    }
-                    else{
-                        std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;                   
-                        QMessageBox::information(self, "Error", "Failed to create account");
-                    }
-
-                    reply->deleteLater();
-                });
-
-                /*
-                httplib::Client client("localhost", 8080);
-
-                if(auto response = client.Post("/register", jrr.dump(), "application/json")){
-                    auto serverResponse = nlohmann::json::parse(response->body);
-
-                    if(response->status == 200){
-                        std::cout << termcolor::green << "Status: " << serverResponse["status"] << termcolor::reset << std::endl;
-                        std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
-
-                        QMetaObject::invokeMethod(self, [self](){
-                            if(!self) return;
-                            QMessageBox::information(self, "Success", "Successfully created account, redirecting page now...");
-                            emit self->account_page();
-                        }, Qt::QueuedConnection);
-                    }
-                    else{
-                        std::cerr << termcolor::red << "HTTP error: " << response->status << termcolor::reset << std::endl;
-                        std::cerr << termcolor::red << "Status: " << serverResponse["message"] << termcolor::reset << std::endl;
-
-                        QMetaObject::invokeMethod(self, [self](){
-                            if(!self) return;
-                            QMessageBox::information(self, "Error", "Failed to create account");
-                        }, Qt::QueuedConnection);
-                    }
+                    QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
+                    emit account_page();
                 }
                 else{
-                    auto error = response.error();
-                    auto errorMessage = "Connection Error: " + std::to_string(static_cast<int>(error));
-                    std::cerr << termcolor::red << errorMessage << termcolor::reset << std::endl;
+                    std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;
+                    QMessageBox::information(this, "Error", "Failed to create account");
+                }
 
-                    QMetaObject::invokeMethod(self, [self, errorMessage](){
-                        if(!self) return;
-                        QMessageBox::information(self, "Error", QString::fromStdString(errorMessage));
-                    }, Qt::QueuedConnection);
-                }*/
-            //});
+                reply->deleteLater();
+            });
         }
 
     });
@@ -449,6 +399,7 @@ void SignupWindow::reset(){
     uni->clear();
     dept->clear();
     lvl->clear();
+    mn->clear();
 
     em->clear();
     pn->clear();
