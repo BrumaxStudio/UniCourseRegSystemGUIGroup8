@@ -24,6 +24,7 @@ set(SRC_FILES
     include/accountpagewindow.hpp
     src/accountpagewindow.cpp
     src/main.cpp
+    resources/creg-gui.rc
 )
 
 qt_standard_project_setup()
@@ -46,7 +47,7 @@ endif(LINUX)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    WIN32_EXECUTABLE False
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
