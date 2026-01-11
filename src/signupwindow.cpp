@@ -7,7 +7,6 @@ SignupWindow::SignupWindow(QWidget *parent)
     SigningLabel = new QLabel(this);
     SigningLabel->setText("Create an account and register courses");
     SigningLabel->setFont(QFont("Times", 25));
-    SigningLabel->setStyleSheet("color:gold");
     //Welcome label
 
     rsuLogo = new QLabel(this);
@@ -18,55 +17,46 @@ SignupWindow::SignupWindow(QWidget *parent)
     first_name = new QLabel(this);
     first_name->setText("First name");
     first_name->setFont(QFont("Times"));
-    first_name->setStyleSheet("color:gold");
 
     firstNameLE = new QLineEdit(this);
     firstNameLE->setPlaceholderText("Required");
     firstNameLE->setFont(QFont("Times"));
-    firstNameLE->setStyleSheet("color:gold");
     //First name - required
 
     //Middle name - optional
     middle_name = new QLabel(this);
     middle_name->setText("Middle name");
     middle_name->setFont(QFont("Times"));
-    middle_name->setStyleSheet("color:gold");
 
     middleNameLE = new QLineEdit(this);
     middleNameLE->setPlaceholderText("Optional");
     middleNameLE->setFont(QFont("Times"));
-    middleNameLE->setStyleSheet("color:gold");
     //Middle name - optional
 
     //last name - required
     last_name = new QLabel(this);
     last_name->setText("Last name");
     last_name->setFont(QFont("Times"));
-    last_name->setStyleSheet("color:gold");
 
     lastNameLE = new QLineEdit(this);
     lastNameLE->setPlaceholderText("Required");
     lastNameLE->setFont(QFont("Times"));
-    lastNameLE->setStyleSheet("color:gold");
     //last name - required
 
     //Username
     userName = new QLabel(this);
     userName->setText("Username");
     userName->setFont(QFont("Times"));
-    userName->setStyleSheet("color:gold");
 
     un = new QLineEdit(this);
     un->setPlaceholderText("Required");
     un->setFont(QFont("Times"));
-    un->setStyleSheet("color:gold");
     //Username
 
     //Gender/Sex
     gender = new QLabel(this);
     gender->setText("Select your gender");
     gender->setFont(QFont("Times"));
-    gender->setStyleSheet("color:gold");
 
     gen = new QComboBox(this);
     gen->addItem("Male");
@@ -78,7 +68,6 @@ SignupWindow::SignupWindow(QWidget *parent)
     department = new QLabel(this);
     department->setText("Department");
     department->setFont(QFont("Times"));
-    department->setStyleSheet("color:gold");
 
     dept = new QComboBox(this);
     dept->addItem("Agric Engineering");
@@ -95,7 +84,6 @@ SignupWindow::SignupWindow(QWidget *parent)
     level = new QLabel(this);
     level->setText("Level");
     level->setFont(QFont("Times"));
-    level->setStyleSheet("color:gold");
 
     lvl = new QComboBox(this);
     lvl->addItem("100");
@@ -109,19 +97,16 @@ SignupWindow::SignupWindow(QWidget *parent)
     matricNO = new QLabel(this);
     matricNO->setText("Matriculation Number");
     matricNO->setFont(QFont("Times"));
-    matricNO->setStyleSheet("color:gold");
 
     mn = new QLineEdit(this);
     mn->setPlaceholderText("Enter the four digits in your MAT. NO.");
     mn->setFont(QFont("Times"));
-    mn->setStyleSheet("color:gold");
     //Mat NO
 
     //University
     univer = new QLabel(this);
     univer->setText("University");
     univer->setFont(QFont("Times"));
-    univer->setStyleSheet("color:gold");
 
     uni = new QComboBox(this);
     uni->addItem("Rivers State University");
@@ -131,22 +116,18 @@ SignupWindow::SignupWindow(QWidget *parent)
     email_add = new QLabel(this);
     email_add->setText("Email");
     email_add->setFont(QFont("Times"));
-    email_add->setStyleSheet("color:gold");
 
     em = new QLineEdit(this);
     em->setPlaceholderText("Required");
     em->setFont(QFont("Times"));
-    em->setStyleSheet("color:gold");
 
     phone_no = new QLabel(this);
     phone_no->setText("Phone number");
     phone_no->setFont(QFont("Times"));
-    phone_no->setStyleSheet("color:gold");
 
     pn = new QLineEdit(this);
     pn->setPlaceholderText("Required");
     pn->setFont(QFont("Times"));
-    pn->setStyleSheet("color:gold");
     //Email and Phone No
 
     //login and sign up
@@ -163,25 +144,21 @@ SignupWindow::SignupWindow(QWidget *parent)
     password1= new QLabel(this);
     password1->setText("Password");
     password1->setFont(QFont("Times"));
-    password1->setStyleSheet("color:gold");
 
     pass1 = new QLineEdit(this);
     pass1->setPlaceholderText("Enter new password");
     pass1->setEchoMode(QLineEdit::Password);
     pass1->setFont(QFont("Times"));
-    pass1->setStyleSheet("color:gold");
 
     //second
     password2= new QLabel(this);
     password2->setText("Re-enter Password");
     password2->setFont(QFont("Times"));
-    password2->setStyleSheet("color:gold");
 
     pass2 = new QLineEdit(this);
     pass2->setPlaceholderText("Enter password again");
     pass2->setEchoMode(QLineEdit::Password);
     pass2->setFont(QFont("Times"));
-    pass2->setStyleSheet("color:gold");
     //Password
 
     //PASSWORD LAYOUT
@@ -317,12 +294,12 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || !std::isdigit(phone_no_v.toLongLong())){
-            if(!std::isdigit(phone_no_v.toLongLong())){
-                QMessageBox::warning(this, "Error", "Enter digits as your phone number!");
-            }
-            else{
+        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || !std::isdigit(phone_no_v.toLongLong()) || mat_no.isEmpty()){
+            if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || phone_no_v.isEmpty()){
                 QMessageBox::warning(this, "Error", "Incomplete Details!");
+            }
+            else if(!std::isdigit(phone_no_v.toLongLong()) && !f_name.isEmpty() && !l_name.isEmpty() && !user_name.isEmpty() && !email_v.isEmpty() && !phone_no_v.isEmpty() && !password_1_v.isEmpty() && !password_2_v.isEmpty()){
+                QMessageBox::warning(this, "Error", "Enter digits as your phone number!");
             }
         }
         else if(password_1_v != password_2_v){
@@ -386,7 +363,11 @@ SignupWindow::SignupWindow(QWidget *parent)
                 reply->deleteLater();
             });
         }
+    });
 
+    QObject::connect(loginButton, &QPushButton::clicked, [&](){
+        QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
+        emit login_page();
     });
 }
 

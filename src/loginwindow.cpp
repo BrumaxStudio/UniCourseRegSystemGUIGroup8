@@ -7,7 +7,6 @@ LoginWindow::LoginWindow(QWidget *parent)
     loginMessage = new QLabel(this);
     loginMessage->setText("Welcome to The Course Registration Portal!");
     loginMessage->setFont(QFont("Times", 29));
-    loginMessage->setStyleSheet("color:yellow");
 
     rsuLogo = new QLabel(this);
     rsuLogo->setPixmap(QPixmap(":/rsu_logo128.jpg"));
@@ -17,32 +16,27 @@ LoginWindow::LoginWindow(QWidget *parent)
     userNameForLogin = new QLabel(this);
     userNameForLogin->setText("Username");
     userNameForLogin->setFont(QFont("Times"));
-    userNameForLogin->setStyleSheet("color:gold");
 
     entryForUserName = new QLineEdit(this);
     entryForUserName->setPlaceholderText("Enter your username");
     entryForUserName->setFont(QFont("Times"));
-    entryForUserName->setStyleSheet("color:gold");
     //Username
 
     //Password
     passwordForLogin = new QLabel(this);
     passwordForLogin->setText("Password");
     passwordForLogin->setFont(QFont("Times"));
-    passwordForLogin->setStyleSheet("color:gold");
 
     entryForPassword = new QLineEdit(this);
     entryForPassword->setPlaceholderText("Enter your password");
     entryForPassword->setEchoMode(QLineEdit::Password);
     entryForPassword->setFont(QFont("Times"));
-    entryForPassword->setStyleSheet("color:gold");
     //Password
 
     //University
     univer = new QLabel(this);
     univer->setText("University");
     univer->setFont(QFont("Times"));
-    univer->setStyleSheet("color:gold");
 
     uni = new QComboBox(this);
     uni->addItem("Rivers State University");

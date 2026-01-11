@@ -5,6 +5,13 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    QString design = R"(QMainWindow, QWidget{
+        background-color: rgb(170, 220, 230); color:black;
+    })";
+
+    app.setStyleSheet(design);
+
     std::cout << termcolor::green << "Database Project" << termcolor::reset << std::endl;
     std::cout << termcolor::green << "RSU-CPE311" << termcolor::reset << std::endl;
     std::cout << termcolor::green << "Graphical User Interface designed using Qt6" << termcolor::reset << std::endl;
