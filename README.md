@@ -21,7 +21,7 @@ This project aims to make it easier for Rivers State University students to regi
 ### *OR*
 
 ```bash
-git clone it@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git
+git clone git@github.com:lil-brumski/UniCourseRegSystemGUIGroup8.git
 cd UniCourseRegSystemGUIGroup8
 git submodule update --init --recursive
 ```
