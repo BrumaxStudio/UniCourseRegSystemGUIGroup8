@@ -10,3 +10,6 @@
 [submodule "third_party/termcolor"]
 	path = third_party/termcolor
 	url = git@github.com:lil-brumski/termcolor.git
+[submodule "third_party/argparse"]
+	path = third_party/argparse
+	url = git@github.com:lil-brumski/argparse.git

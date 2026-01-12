@@ -1,0 +1,5 @@
+#pragma once
+
+#define creg8_gui_VERSION_MAJOR @creg8_gui_VERSION_MAJOR@
+#define creg8_gui_VERSION_MINOR @creg8_gui_VERSION_MINOR@
+#define creg8_gui_VERSION_PATCH @creg8_gui_VERSION_PATCH@
