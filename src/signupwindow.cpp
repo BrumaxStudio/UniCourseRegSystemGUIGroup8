@@ -357,7 +357,7 @@ SignupWindow::SignupWindow(QWidget *parent)
                 }
                 else{
                     std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;
-                    QMessageBox::information(this, "Error", "Failed to create account");
+                    QMessageBox::warning(this, "Error", "Failed to create account");
                 }
 
                 reply->deleteLater();
