@@ -3,7 +3,7 @@
 This project aims to make it easier for Rivers State University students to register their courses anywhere they are located.
 
 ---
-![Image](resources/creg8-ui-128.png)
+![Image](resources/creg8-ui-480.png)
 
 ---
 
