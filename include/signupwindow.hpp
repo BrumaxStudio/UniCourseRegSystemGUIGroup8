@@ -36,6 +36,8 @@ signals:
 
 public:
     void reset();
+    QString ipAddress;
+    QString portNumber;
 
 private:
     std::jthread hash_thread;

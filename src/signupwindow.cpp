@@ -286,21 +286,32 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString mat_no = "";
 
         mat_no = (level_v == 100)? "DE.2025/": (level_v == 200)? "DE.2024/": (level_v == 300)? "DE.2023/": (level_v == 400)? "DE.2022/": (level_v == 500)? "DE.2021/": "UNKNOWN";
-        mat_no += QString::number(mn->text().toInt());
+        mat_no += mn->text();
 
         QString email_v = em->text();
         QString phone_no_v = pn->text();
 
+        std::optional<int> pnv = 0;
+        std::optional<int> mnv = 0;
+
+        try {
+            pnv = phone_no_v.toInt();
+        } catch (std::exception& error) {
+            pnv = std::nullopt;
+        }
+
+        try {
+            mnv = mat_no.toInt();
+        } catch (std::exception& error) {
+            mnv = std::nullopt;
+        }
+
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || !std::isdigit(phone_no_v.toLongLong()) || mat_no.isEmpty()){
-            if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || phone_no_v.isEmpty()){
-                QMessageBox::warning(this, "Error", "Incomplete Details!");
-            }
-            else if(!std::isdigit(phone_no_v.toLongLong()) && !f_name.isEmpty() && !l_name.isEmpty() && !user_name.isEmpty() && !email_v.isEmpty() && !phone_no_v.isEmpty() && !password_1_v.isEmpty() && !password_2_v.isEmpty()){
-                QMessageBox::warning(this, "Error", "Enter digits as your phone number!");
-            }
+        if(!pnv || !mnv || f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
+            QMessageBox::warning(this, "Error", "Incomplete Details!");
+
         }
         else if(password_1_v != password_2_v){
             QMessageBox::warning(this, "Error", "Passwords don't match!");
@@ -335,7 +346,7 @@ SignupWindow::SignupWindow(QWidget *parent)
             QByteArray data = QByteArray::fromStdString(json_reader.dump());
 
             //envelope for sending request
-            QNetworkRequest request(QUrl("http://localhost:8080/register"));
+            QNetworkRequest request(QUrl(QString("http://%1:%2/register").arg(ipAddress, portNumber)));//"http://" + ipAddress + ":" + portNumber + "register"));
             //request type
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -354,6 +365,11 @@ SignupWindow::SignupWindow(QWidget *parent)
 
                     QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
                     emit account_page();
+                }
+                else if(reply->error() == QNetworkReply::HostNotFoundError){
+                    auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cout << termcolor::green << "Internet Connection Required" << termcolor::reset << std::endl;
+                    QMessageBox::warning(this, "Network Error", "Internet Connection Required");
                 }
                 else{
                     std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;

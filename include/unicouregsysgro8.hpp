@@ -1,6 +1,8 @@
 #ifndef UNICOUREGSYSGRO8_HPP
 #define UNICOUREGSYSGRO8_HPP
 
+#include <string>
+
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QCloseEvent>
@@ -22,6 +24,12 @@ private:
     LoginWindow* log;
     SignupWindow* sig;
     AccountPageWindow* acc;
+
+public:
+    void passToServer(std::string ipAddress, std::string portNumber);
+
+private:
+    void connectToServer(std::string ipAddress, std::string portNumber);
 };
 
 #endif // UNICOUREGSYSGRO8_HPP

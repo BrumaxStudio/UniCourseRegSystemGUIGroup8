@@ -38,3 +38,12 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
         screenChanger->setCurrentWidget(log);
     });
 }
+
+void UniCouRegSysGro8::connectToServer(std::string ipAddress, std::string portNumber){
+    sig->ipAddress = QString::fromStdString(ipAddress);
+    sig->portNumber = QString::fromStdString(portNumber);
+}
+
+void UniCouRegSysGro8::passToServer(std::string ipAddress, std::string portNumber){
+    this->connectToServer(ipAddress, portNumber);
+}
