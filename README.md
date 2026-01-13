@@ -44,6 +44,7 @@ cmake --build . --config Release
 # *Acknowledgements:*
 This project uses the following libraries:
 + Qt6 - LGPL
++ p-ranav/argparse - MIT License
 + Bcrypt.cpp - BSD 4-Clause
 + Nlohmann/Json - MIT License
 + yhirose/cpp-httplib - MIT License
