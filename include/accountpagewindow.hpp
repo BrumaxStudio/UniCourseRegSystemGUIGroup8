@@ -2,6 +2,11 @@
 #define ACCOUNTPAGEWINDOW_HPP
 
 #include <QWidget>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QVBoxLayout>
+#include <QStringList>
+#include <QLabel>
 
 class AccountPageWindow : public QWidget
 {
@@ -13,7 +18,10 @@ signals:
     void login_page();
 
 private:
+    QLabel* mainText;
+    QTableWidget* table;
 
+    QVBoxLayout* mainLayout;
 };
 
 #endif // ACCOUNTPAGEWINDOW_HPP

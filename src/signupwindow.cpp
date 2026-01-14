@@ -292,9 +292,9 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString phone_no_v = pn->text();
 
         auto pnv = this->getInput(pn);
-        //if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
+        if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
         auto mnv = this->getInput(mn);
-        //if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
+        if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
 
 
         QString password_1_v = pass1->text();
@@ -312,7 +312,8 @@ SignupWindow::SignupWindow(QWidget *parent)
                     QMessageBox::warning(this, "Error", "Invalid matric number!");
                 }
                 else if(!pnv && !mnv ){
-                    QMessageBox::warning(this, "Error", "Invalid phone and matric number!");
+                    if(phone_no_v.isEmpty() || mat_no.isEmpty()) QMessageBox::warning(this, "Error", "Incomplete Details!");
+                    else if(!phone_no_v.isEmpty() && !mat_no.isEmpty()) QMessageBox::warning(this, "Error", "Invalid phone and matric number!");
                 }
             }
         }
@@ -396,7 +397,7 @@ void SignupWindow::reset(){
     lastNameLE->clear();
 
     gen->clear();
-    uni->clear();
+    //uni->clear();
     dept->clear();
     lvl->clear();
     mn->clear();
