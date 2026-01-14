@@ -292,9 +292,9 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString phone_no_v = pn->text();
 
         auto pnv = this->getInput(pn);
-        if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
+        //if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
         auto mnv = this->getInput(mn);
-        if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
+        //if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
 
 
         QString password_1_v = pass1->text();
