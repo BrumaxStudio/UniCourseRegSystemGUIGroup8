@@ -20,6 +20,8 @@
 #include <thread>
 #include <chrono>
 #include <fstream>
+#include <string>
+#include <expected>
 
 #include "nlohmann/json.hpp"
 #include "termcolor/termcolor.hpp"
@@ -38,6 +40,19 @@ public:
     void reset();
     QString ipAddress;
     QString portNumber;
+
+private:
+    std::expected<int, bool> getInput(QLineEdit* LE){
+        int good = 0;
+        bool  bad = false;
+
+        try {
+            good = std::stoi(LE->text().toStdString());
+            return good;
+        } catch (const std::exception& error) {
+            return std::unexpected(bad);
+        }
+    }
 
 private:
     std::jthread hash_thread;

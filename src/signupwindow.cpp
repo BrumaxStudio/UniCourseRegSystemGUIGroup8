@@ -291,27 +291,30 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString email_v = em->text();
         QString phone_no_v = pn->text();
 
-        std::optional<int> pnv = 0;
-        std::optional<int> mnv = 0;
+        auto pnv = this->getInput(pn);
+        if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
+        auto mnv = this->getInput(mn);
+        if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
 
-        try {
-            pnv = phone_no_v.toInt();
-        } catch (std::exception& error) {
-            pnv = std::nullopt;
-        }
-
-        try {
-            mnv = mat_no.toInt();
-        } catch (std::exception& error) {
-            mnv = std::nullopt;
-        }
 
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
         if(!pnv || !mnv || f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
-            QMessageBox::warning(this, "Error", "Incomplete Details!");
-
+            if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
+                QMessageBox::warning(this, "Error", "Incomplete Details!");
+            }
+            else {
+                if(!pnv && mnv){
+                    QMessageBox::warning(this, "Error", "Invalid phone number!");
+                }
+                else if(!mnv && pnv){
+                    QMessageBox::warning(this, "Error", "Invalid matric number!");
+                }
+                else if(!pnv && !mnv ){
+                    QMessageBox::warning(this, "Error", "Invalid phone and matric number!");
+                }
+            }
         }
         else if(password_1_v != password_2_v){
             QMessageBox::warning(this, "Error", "Passwords don't match!");
