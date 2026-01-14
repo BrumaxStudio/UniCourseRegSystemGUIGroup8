@@ -8,7 +8,7 @@ This project aims to make it easier for Rivers State University students to regi
 ---
 
 *Prerequisites:*
-+ C++20 Compiler
++ C++ 23 Compiler
 + Cmake 3.30 and above
 + Terminal/Command Line
 
