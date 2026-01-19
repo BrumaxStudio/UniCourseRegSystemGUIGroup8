@@ -5,34 +5,68 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
 {
     mainText = new QLabel(this);
     mainText->setFont(QFont("Times", 25));
-    mainText->setText("Student");
-
-    int row = 10;
+    mainText->setText("Student Course Registration");
 
     table = new QTableWidget(this);
-    table->setColumnCount(11);
-    table->setRowCount(row);
-
-    QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Date of Birth", "Department", "Level", "Email Address", "Phone Number", "School"};
+    table->setColumnCount(10);
+    QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Department", "Level", "Email Address", "Phone Number", "School Name"};
     table->setHorizontalHeaderLabels(headers);
-    for(size_t x = 0; x < 10; x++){
-        table->setItem(x, 0, new QTableWidgetItem("DE.2067"));
-        table->setItem(x, 1, new QTableWidgetItem("Tamaratare"));
-        table->setItem(x, 2, new QTableWidgetItem("Oghenebrume"));
-        table->setItem(x, 3, new QTableWidgetItem("David"));
-        table->setItem(x, 4, new QTableWidgetItem("Male"));
-        table->setItem(x, 5, new QTableWidgetItem("2345-01-03"));
-        table->setItem(x, 6, new QTableWidgetItem("Computer Engineering"));
-        table->setItem(x, 7, new QTableWidgetItem("300"));
-        table->setItem(x, 8, new QTableWidgetItem("creg8@gmail.com"));
-        table->setItem(x, 9, new QTableWidgetItem("+23467"));
-        table->setItem(x, 10, new QTableWidgetItem("Rivers State University"));
-    }
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    scheduleLabel = new QLabel(this);
+    scheduleLabel->setFont(QFont("Times", 18));
+    scheduleLabel->setText("Available Schedules");
+
+    scheTable = new QTableWidget(this);
+    scheTable->setColumnCount(6);
+    QStringList scheHeader = {"Schedule ID", "Day of Week", "Time", "Venue", "Lecturer", "Course Code"};
+    scheTable->setHorizontalHeaderLabels(scheHeader);
+    scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mainText);
     mainLayout->addWidget(table);
+    mainLayout->addWidget(scheduleLabel);
+    mainLayout->addWidget(scheTable);
 
     this->setLayout(mainLayout);
+}
+
+void AccountPageWindow::refreshPage(){
+
+    if(dataM.contains("data") && !dataM["data"].is_null() && dataM.contains("schedule") && !dataM["schedule"].is_null() && dataM["schedule"].is_array()){
+        std::cout << dataM.dump() << std::endl;
+        auto data = dataM["data"];
+        auto scheDataList = dataM["schedule"];
+
+        table->setRowCount(1);
+
+        table->setItem(0, 0, new QTableWidgetItem(QString::fromStdString(data.at("mat_no").get<std::string>())));
+        table->setItem(0, 1, new QTableWidgetItem(QString::fromStdString(data.at("first_name").get<std::string>())));
+        table->setItem(0, 2, new QTableWidgetItem(QString::fromStdString(data.at("middle_name").get<std::string>())));
+        table->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(data.at("last_name").get<std::string>())));
+        table->setItem(0, 4, new QTableWidgetItem(QString::fromStdString(data.at("sex").get<std::string>())));
+        table->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(data.at("dept").get<std::string>())));
+        table->setItem(0, 6, new QTableWidgetItem(QString::number(data.at("level").get<int>())));
+        table->setItem(0, 7, new QTableWidgetItem(QString::fromStdString(data.at("email").get<std::string>())));
+        table->setItem(0, 8, new QTableWidgetItem(QString::number(data.at("phone_no").get<long long>())));
+        table->setItem(0, 9, new QTableWidgetItem(QString::fromStdString(data.at("name").get<std::string>())));
+
+        for(size_t x = 0; x < scheDataList.size(); x++){
+            scheTable->insertRow(x);
+            auto scheData = scheDataList[x];
+
+            scheTable->setItem(x, 0, new QTableWidgetItem(QString::number(scheData["schedule_id"].get<int>())));
+            scheTable->setItem(x, 1, new QTableWidgetItem(QString::fromStdString(scheData["day_of_week"].get<std::string>())));
+            scheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["time"].get<std::string>())));
+            scheTable->setItem(x, 3, new QTableWidgetItem(QString::fromStdString(scheData["venue"].get<std::string>())));
+            scheTable->setItem(x, 4, new QTableWidgetItem(QString::fromStdString(scheData["name"].get<std::string>())));
+            scheTable->setItem(x, 5, new QTableWidgetItem(QString::fromStdString(scheData["course_code"].get<std::string>())));
+        }
+    }
+    else{
+        std::cout << "Empty Record" << std::endl;
+    }
+    //table->setItem(x, 10, new QTableWidgetItem("Rivers State University"));
+
 }

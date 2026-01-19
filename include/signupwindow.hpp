@@ -25,6 +25,7 @@
 
 #include "nlohmann/json.hpp"
 #include "termcolor/termcolor.hpp"
+#include <type_traits>
 
 class SignupWindow : public QWidget
 {
@@ -40,15 +41,23 @@ public:
     void reset();
     QString ipAddress;
     QString portNumber;
+    nlohmann::json serverResponse;
 
 private:
-    std::expected<int, bool> getInput(QLineEdit* LE){
+    template<class T> std::expected<T, bool> getInput(QLineEdit* LE){
         int good = 0;
         bool  bad = false;
 
         try {
-            good = std::stoi(LE->text().toStdString());
-            return good;
+            if(std::is_same_v<int, T>){
+                good = std::stoi(LE->text().toStdString());
+                return good;
+            }
+            else if(std::is_same_v<long long, T>){
+                good = std::stoll(LE->text().toStdString());
+                return good;
+            }
+
         } catch (const std::exception& error) {
             return std::unexpected(bad);
         }

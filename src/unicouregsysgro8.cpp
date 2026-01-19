@@ -15,21 +15,23 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
     this->setCentralWidget(screenChanger);
 
     //Resets page and redirects page to the account page
-    QObject::connect(log, &LoginWindow::account_page, this, [this](){
-        log->reset();
+    QObject::connect(log, &LoginWindow::account_page, this, [this](){     
         screenChanger->setCurrentWidget(acc);
+        log->reset();
     });
 
     //Resets page and redirects page to the signup page
     QObject::connect(log, &LoginWindow::signup_page, this, [this](){
-        log->reset();
         screenChanger->setCurrentWidget(sig);
+        log->reset();
     });
 
     //Resets page and redirects page to the account page
     QObject::connect(sig, &SignupWindow::account_page, this, [this](){
-        sig->reset();
+        if(!sig->serverResponse.empty()) acc->dataM = sig->serverResponse;
+        acc->refreshPage();
         screenChanger->setCurrentWidget(acc);
+        sig->reset();
     });
 
     //Resets page and redirects page to the login page

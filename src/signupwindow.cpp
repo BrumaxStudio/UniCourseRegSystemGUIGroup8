@@ -275,7 +275,7 @@ SignupWindow::SignupWindow(QWidget *parent)
         int level_v = 0;
 
         try{
-            level_v = /*std::stoi(*/lvl->currentText().toInt();//(//.toStdString());
+            level_v = lvl->currentText().toInt();
         }
         catch(const std::exception& error){
             std::cerr << termcolor::red << "Error in converting level to an INT" << termcolor::reset << std::endl;
@@ -291,10 +291,13 @@ SignupWindow::SignupWindow(QWidget *parent)
         QString email_v = em->text();
         QString phone_no_v = pn->text();
 
-        auto pnv = this->getInput(pn);
-        if(pnv) std::cout << "Phn No: " << pnv.value() << std::endl;
-        auto mnv = this->getInput(mn);
-        if(mnv) std::cout << "Mat No: " << mnv.value() << std::endl;
+        auto pnv = this->getInput<long long>(pn);
+        if(pnv) std::cout << termcolor::green << "Phn No is valid " << termcolor::reset << std::endl;
+        else std::cout << termcolor::red << "Phn No is invalid " << termcolor::reset << std::endl;
+
+        auto mnv = this->getInput<int>(mn);
+        if(mnv) std::cout << termcolor::green << "Mat No is valid " << termcolor::reset << std::endl;
+        else std::cout << termcolor::red << "Mat No is invalid " << termcolor::reset << std::endl;
 
 
         QString password_1_v = pass1->text();
@@ -362,21 +365,22 @@ SignupWindow::SignupWindow(QWidget *parent)
                 //gets connection code
                 int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
+                serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+
                 //checks if an error was returned and if the status code is equal to 200
                 if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
-                    auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
                     std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
 
                     QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
                     emit account_page();
                 }
-                else if(reply->error() == QNetworkReply::HostNotFoundError){
-                    auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cout << termcolor::green << "Internet Connection Required" << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Network Error", "Internet Connection Required");
+                else if(reply->error() == QNetworkReply::ConnectionRefusedError){
+                    //auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                    QMessageBox::warning(this, "Server Error", "Server is down, contact support or wait");
                 }
                 else{
-                    std::cerr << termcolor::red << "Failed to create an account" << termcolor::reset << std::endl;
+                    std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
                     QMessageBox::warning(this, "Error", "Failed to create account");
                 }
 

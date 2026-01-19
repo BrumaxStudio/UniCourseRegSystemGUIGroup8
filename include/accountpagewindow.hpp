@@ -7,6 +7,11 @@
 #include <QVBoxLayout>
 #include <QStringList>
 #include <QLabel>
+#include <QHeaderView>
+
+#include <nlohmann/json.hpp>
+
+#include <iostream>
 
 class AccountPageWindow : public QWidget
 {
@@ -17,9 +22,16 @@ public:
 signals:
     void login_page();
 
+public:
+    nlohmann::json dataM;
+    void refreshPage();
+
 private:
     QLabel* mainText;
     QTableWidget* table;
+
+    QLabel* scheduleLabel;
+    QTableWidget* scheTable;
 
     QVBoxLayout* mainLayout;
 };
