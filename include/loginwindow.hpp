@@ -10,8 +10,14 @@
 #include <QMessageBox>
 #include <QString>
 #include <QComboBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 #include <nlohmann/json.hpp>
+#include <termcolor/termcolor.hpp>
+
+#include <iostream>
 
 class LoginWindow : public QWidget
 {
@@ -25,6 +31,10 @@ signals:
 
 public:
     void reset();
+    void refreshPage();
+    QString ipAddress;
+    QString portNumber;
+    nlohmann::json serverResponse;
 
 private:
     nlohmann::json reader_json;

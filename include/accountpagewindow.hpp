@@ -8,6 +8,8 @@
 #include <QStringList>
 #include <QLabel>
 #include <QHeaderView>
+#include <QPushButton>
+#include <QHBoxLayout>
 
 #include <nlohmann/json.hpp>
 
@@ -21,10 +23,12 @@ public:
 
 signals:
     void login_page();
+    void signup_page();
 
 public:
     nlohmann::json dataM;
     void refreshPage();
+    void reset();
 
 private:
     QLabel* mainText;
@@ -34,6 +38,11 @@ private:
     QTableWidget* scheTable;
 
     QVBoxLayout* mainLayout;
+
+    QPushButton* logOutPB;
+    QPushButton* SignInPB;
+    QHBoxLayout* LOSI;
+
 };
 
 #endif // ACCOUNTPAGEWINDOW_HPP

@@ -15,7 +15,9 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
     this->setCentralWidget(screenChanger);
 
     //Resets page and redirects page to the account page
-    QObject::connect(log, &LoginWindow::account_page, this, [this](){     
+    QObject::connect(log, &LoginWindow::account_page, this, [this](){
+        if(!log->serverResponse.empty()) acc->dataM = log->serverResponse;
+        acc->refreshPage();
         screenChanger->setCurrentWidget(acc);
         log->reset();
     });
@@ -36,14 +38,31 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
 
     //Resets page and redirects page to the login page
     QObject::connect(sig, &SignupWindow::login_page, this, [this](){
-        sig->reset();
         screenChanger->setCurrentWidget(log);
+        sig->reset();
+        log->refreshPage();
+    });
+
+    //Resets page and redirects page to the login page
+    QObject::connect(acc, &AccountPageWindow::login_page, this, [this](){
+        screenChanger->setCurrentWidget(log);
+        acc->reset();
+        log->refreshPage();
+    });
+
+    //Resets page and redirects page to the signup page
+    QObject::connect(acc, &AccountPageWindow::signup_page, this, [this](){
+        screenChanger->setCurrentWidget(sig);
+        acc->reset();
     });
 }
 
 void UniCouRegSysGro8::connectToServer(std::string ipAddress, std::string portNumber){
     sig->ipAddress = QString::fromStdString(ipAddress);
     sig->portNumber = QString::fromStdString(portNumber);
+
+    log->ipAddress = QString::fromStdString(ipAddress);
+    log->portNumber = QString::fromStdString(portNumber);
 }
 
 void UniCouRegSysGro8::passToServer(std::string ipAddress, std::string portNumber){

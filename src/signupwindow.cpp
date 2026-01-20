@@ -365,10 +365,9 @@ SignupWindow::SignupWindow(QWidget *parent)
                 //gets connection code
                 int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-                serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-
                 //checks if an error was returned and if the status code is equal to 200
                 if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
+                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
                     std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
 
                     QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
@@ -380,6 +379,7 @@ SignupWindow::SignupWindow(QWidget *parent)
                     QMessageBox::warning(this, "Server Error", "Server is down, contact support or wait");
                 }
                 else{
+                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
                     std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
                     QMessageBox::warning(this, "Error", "Failed to create account");
                 }

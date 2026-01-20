@@ -23,11 +23,24 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     scheTable->setHorizontalHeaderLabels(scheHeader);
     scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    logOutPB = new QPushButton(this);
+    logOutPB->setFont(QFont("Times"));
+    logOutPB->setText("Log Out");
+
+    SignInPB = new QPushButton(this);
+    SignInPB->setFont(QFont("Times"));
+    SignInPB->setText("Sign In");
+
+    LOSI = new QHBoxLayout;
+    LOSI->addWidget(logOutPB);
+    LOSI->addWidget(SignInPB);
+
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mainText);
     mainLayout->addWidget(table);
     mainLayout->addWidget(scheduleLabel);
     mainLayout->addWidget(scheTable);
+    mainLayout->addLayout(LOSI);
 
     this->setLayout(mainLayout);
 }
@@ -67,6 +80,10 @@ void AccountPageWindow::refreshPage(){
     else{
         std::cout << "Empty Record" << std::endl;
     }
-    //table->setItem(x, 10, new QTableWidgetItem("Rivers State University"));
-
 }
+
+void AccountPageWindow::reset(){
+    table->clear();
+    scheTable->clear();
+}
+

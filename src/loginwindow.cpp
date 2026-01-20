@@ -5,51 +5,31 @@ LoginWindow::LoginWindow(QWidget *parent)
 {
     //Welcome label
     loginMessage = new QLabel(this);
-    loginMessage->setText("Welcome to The Course Registration Portal!");
-    loginMessage->setFont(QFont("Times", 29));
 
     rsuLogo = new QLabel(this);
-    rsuLogo->setPixmap(QPixmap(":/rsu_logo128.jpg"));
-    rsuLogo->setScaledContents(true);
 
     //Username
     userNameForLogin = new QLabel(this);
-    userNameForLogin->setText("Username");
-    userNameForLogin->setFont(QFont("Times"));
 
     entryForUserName = new QLineEdit(this);
-    entryForUserName->setPlaceholderText("Enter your username");
-    entryForUserName->setFont(QFont("Times"));
     //Username
 
     //Password
     passwordForLogin = new QLabel(this);
-    passwordForLogin->setText("Password");
-    passwordForLogin->setFont(QFont("Times"));
-
     entryForPassword = new QLineEdit(this);
-    entryForPassword->setPlaceholderText("Enter your password");
-    entryForPassword->setEchoMode(QLineEdit::Password);
-    entryForPassword->setFont(QFont("Times"));
     //Password
 
     //University
     univer = new QLabel(this);
-    univer->setText("University");
-    univer->setFont(QFont("Times"));
-
     uni = new QComboBox(this);
-    uni->addItem("Rivers State University");
     //University
 
     //Pushbutton - login
     loginButton = new QPushButton(this);
-    loginButton->setText("Login");
     //Pushbutton - login
 
     //Pushbutton - signup
     SignupButton = new QPushButton(this);
-    SignupButton->setText("Sign up");
     //Pushbutton - signup
 
     //NAME LAYOUT
@@ -80,6 +60,42 @@ LoginWindow::LoginWindow(QWidget *parent)
     mainLayout->addLayout(passwordLayout);
     mainLayout->addLayout(loginORsignup);
     this->setLayout(mainLayout);
+    this->refreshPage();
+}
+
+void LoginWindow::reset(){
+    entryForUserName->clear();
+    uni->clear();
+    entryForPassword->clear();
+}
+
+void LoginWindow::refreshPage(){
+    loginMessage->setText("Welcome to The Course Registration Portal!");
+    loginMessage->setFont(QFont("Times", 29));
+
+    rsuLogo->setPixmap(QPixmap(":/rsu_logo128.jpg"));
+    rsuLogo->setScaledContents(true);
+
+    userNameForLogin->setText("Username");
+    userNameForLogin->setFont(QFont("Times"));
+
+    entryForUserName->setPlaceholderText("Enter your username");
+    entryForUserName->setFont(QFont("Times"));
+
+    passwordForLogin->setText("Password");
+    passwordForLogin->setFont(QFont("Times"));
+
+    entryForPassword->setPlaceholderText("Enter your password");
+    entryForPassword->setEchoMode(QLineEdit::Password);
+    entryForPassword->setFont(QFont("Times"));
+
+    univer->setText("University");
+    univer->setFont(QFont("Times"));
+
+    uni->addItem("Rivers State University");
+
+    loginButton->setText("Login");
+    SignupButton->setText("Sign up");
 
     QObject::connect(loginButton, &QPushButton::clicked, [&](){
         QString username = entryForUserName->text();
@@ -89,8 +105,51 @@ LoginWindow::LoginWindow(QWidget *parent)
             QMessageBox::warning(this, "Error", "Incomplete Credentials");
         }
         else{
-            QMessageBox::information(this, "Success", "Login Successful");
-            emit account_page();
+            reader_json["user_name"] = username.toStdString();
+            reader_json["raw_password"] = password.toStdString();
+
+            //for transferring the json data to the server
+            QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
+
+            std::cout << reader_json.dump() << std::endl;
+
+            //can only transfer raw bytes
+            QByteArray data = QByteArray::fromStdString(reader_json.dump());
+
+            //envelope for sending request
+            QNetworkRequest request(QUrl(QString("http://%1:%2/login/student").arg(ipAddress, portNumber)));//"http://" + ipAddress + ":" + portNumber + "register"));
+            //request type
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+            //object for receiving the server's reply
+            QNetworkReply* reply = clientApp->post(request, data);
+
+            //does stuff when the server replies
+            QObject::connect(reply, &QNetworkReply::finished, this, [this, reply]{
+                //gets connection code
+                int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+                //checks if an error was returned and if the status code is equal to 200
+                if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
+                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
+
+                    QMessageBox::information(this, "Success", "Successfully logged in, redirecting page now...");
+                    emit account_page();
+                }
+                else if(reply->error() == QNetworkReply::ConnectionRefusedError){
+                    //auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                    QMessageBox::warning(this, "Server Error", "Server is down, contact support or wait");
+                }
+                else{
+                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
+                    std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
+                    QMessageBox::warning(this, "Error", "Failed to log in");
+                }
+
+                reply->deleteLater();
+            });
         }
     });
 
@@ -98,10 +157,4 @@ LoginWindow::LoginWindow(QWidget *parent)
         QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
         emit signup_page();
     });
-}
-
-void LoginWindow::reset(){
-    entryForUserName->clear();
-    uni->clear();
-    entryForPassword->clear();
 }
