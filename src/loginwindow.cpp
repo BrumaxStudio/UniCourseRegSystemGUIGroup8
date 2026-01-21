@@ -145,7 +145,7 @@ void LoginWindow::refreshPage(){
                 else{
                     serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
                     std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Error", "Failed to log in");
+                    QMessageBox::warning(this, "Error", QString::fromStdString(serverResponse["message"]));
                 }
 
                 reply->deleteLater();

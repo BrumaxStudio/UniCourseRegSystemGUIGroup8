@@ -9,9 +9,6 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
 
     table = new QTableWidget(this);
     table->setColumnCount(10);
-    QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Department", "Level", "Email Address", "Phone Number", "School Name"};
-    table->setHorizontalHeaderLabels(headers);
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     scheduleLabel = new QLabel(this);
     scheduleLabel->setFont(QFont("Times", 18));
@@ -19,9 +16,6 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
 
     scheTable = new QTableWidget(this);
     scheTable->setColumnCount(6);
-    QStringList scheHeader = {"Schedule ID", "Day of Week", "Time", "Venue", "Lecturer", "Course Code"};
-    scheTable->setHorizontalHeaderLabels(scheHeader);
-    scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     logOutPB = new QPushButton(this);
     logOutPB->setFont(QFont("Times"));
@@ -52,6 +46,14 @@ void AccountPageWindow::refreshPage(){
         auto data = dataM["data"];
         auto scheDataList = dataM["schedule"];
 
+        QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Department", "Level", "Email Address", "Phone Number", "School Name"};
+        table->setHorizontalHeaderLabels(headers);
+        table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        QStringList scheHeader = {"Schedule ID", "Day of Week", "Time", "Venue", "Lecturer", "Course Code"};
+        scheTable->setHorizontalHeaderLabels(scheHeader);
+        scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
         table->setRowCount(1);
 
         table->setItem(0, 0, new QTableWidgetItem(QString::fromStdString(data.at("mat_no").get<std::string>())));
@@ -80,6 +82,14 @@ void AccountPageWindow::refreshPage(){
     else{
         std::cout << "Empty Record" << std::endl;
     }
+
+    QObject::connect(logOutPB, &QPushButton::clicked, [&](){
+        emit login_page();
+    });
+
+    QObject::connect(SignInPB, &QPushButton::clicked, [&](){
+        emit signup_page();
+    });
 }
 
 void AccountPageWindow::reset(){

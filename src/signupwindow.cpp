@@ -74,7 +74,7 @@ SignupWindow::SignupWindow(QWidget *parent)
     dept->addItem("Chemical Engineering");
     dept->addItem("Computer Engineering");
     dept->addItem("Civil Engineering");
-    dept->addItem("Electrical/Electronics Enginering");
+    dept->addItem("Electrical/Electronics Engineering");
     dept->addItem("Marine Engineering");
     dept->addItem("Mechanical Engineering");
     dept->addItem("Petroleum");
