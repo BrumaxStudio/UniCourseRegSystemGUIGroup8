@@ -5,8 +5,6 @@ SignupWindow::SignupWindow(QWidget *parent)
 {
     //Welcome label
     SigningLabel = new QLabel(this);
-    SigningLabel->setText("Create an account and register courses");
-    SigningLabel->setFont(QFont("Times", 25));
     //Welcome label
 
     rsuLogo = new QLabel(this);
@@ -15,39 +13,21 @@ SignupWindow::SignupWindow(QWidget *parent)
 
     //First name - required
     first_name = new QLabel(this);
-    first_name->setText("First name");
-    first_name->setFont(QFont("Times"));
-
     firstNameLE = new QLineEdit(this);
-    firstNameLE->setPlaceholderText("Required");
-    firstNameLE->setFont(QFont("Times"));
     //First name - required
 
     //Middle name - optional
     middle_name = new QLabel(this);
-    middle_name->setText("Middle name");
-    middle_name->setFont(QFont("Times"));
-
     middleNameLE = new QLineEdit(this);
-    middleNameLE->setPlaceholderText("Optional");
-    middleNameLE->setFont(QFont("Times"));
     //Middle name - optional
 
     //last name - required
     last_name = new QLabel(this);
-    last_name->setText("Last name");
-    last_name->setFont(QFont("Times"));
-
     lastNameLE = new QLineEdit(this);
-    lastNameLE->setPlaceholderText("Required");
-    lastNameLE->setFont(QFont("Times"));
     //last name - required
 
     //Username
     userName = new QLabel(this);
-    userName->setText("Username");
-    userName->setFont(QFont("Times"));
-
     un = new QLineEdit(this);
     un->setPlaceholderText("Required");
     un->setFont(QFont("Times"));
@@ -55,110 +35,49 @@ SignupWindow::SignupWindow(QWidget *parent)
 
     //Gender/Sex
     gender = new QLabel(this);
-    gender->setText("Select your gender");
-    gender->setFont(QFont("Times"));
-
     gen = new QComboBox(this);
-    gen->addItem("Male");
-    gen->addItem("Female");
-    gen->addItem("Prefer not to say");
     //Gender/Sex
 
     //Department
     department = new QLabel(this);
-    department->setText("Department");
-    department->setFont(QFont("Times"));
-
     dept = new QComboBox(this);
-    dept->addItem("Agric Engineering");
-    dept->addItem("Chemical Engineering");
-    dept->addItem("Computer Engineering");
-    dept->addItem("Civil Engineering");
-    dept->addItem("Electrical/Electronics Engineering");
-    dept->addItem("Marine Engineering");
-    dept->addItem("Mechanical Engineering");
-    dept->addItem("Petroleum");
     //Department
 
     //Level
     level = new QLabel(this);
-    level->setText("Level");
-    level->setFont(QFont("Times"));
-
     lvl = new QComboBox(this);
-    lvl->addItem("100");
-    lvl->addItem("200");
-    lvl->addItem("300");
-    lvl->addItem("400");
-    lvl->addItem("500");
     //Level
 
     //Mat NO
     matricNO = new QLabel(this);
-    matricNO->setText("Matriculation Number");
-    matricNO->setFont(QFont("Times"));
-
     mn = new QLineEdit(this);
-    mn->setPlaceholderText("Enter the four digits in your MAT. NO.");
-    mn->setFont(QFont("Times"));
     //Mat NO
 
     //University
     univer = new QLabel(this);
-    univer->setText("University");
-    univer->setFont(QFont("Times"));
-
     uni = new QComboBox(this);
-    uni->addItem("Rivers State University");
     //University
 
     //Email and Phone No
     email_add = new QLabel(this);
-    email_add->setText("Email");
-    email_add->setFont(QFont("Times"));
-
     em = new QLineEdit(this);
-    em->setPlaceholderText("Required");
-    em->setFont(QFont("Times"));
-
     phone_no = new QLabel(this);
-    phone_no->setText("Phone number");
-    phone_no->setFont(QFont("Times"));
-
     pn = new QLineEdit(this);
-    pn->setPlaceholderText("Required");
-    pn->setFont(QFont("Times"));
     //Email and Phone No
 
     //login and sign up
     loginButton = new QPushButton(this);
-    loginButton->setText("Already have an account");
-
     SignupButton = new QPushButton(this);
-    SignupButton->setText("Sign up");
     //login and sign up
-
 
     //Password
     //first
     password1= new QLabel(this);
-    password1->setText("Password");
-    password1->setFont(QFont("Times"));
-
     pass1 = new QLineEdit(this);
-    pass1->setPlaceholderText("Enter new password");
-    pass1->setEchoMode(QLineEdit::Password);
-    pass1->setFont(QFont("Times"));
 
     //second
     password2= new QLabel(this);
-    password2->setText("Re-enter Password");
-    password2->setFont(QFont("Times"));
-
     pass2 = new QLineEdit(this);
-    pass2->setPlaceholderText("Enter password again");
-    pass2->setEchoMode(QLineEdit::Password);
-    pass2->setFont(QFont("Times"));
     //Password
 
     //PASSWORD LAYOUT
@@ -262,7 +181,102 @@ SignupWindow::SignupWindow(QWidget *parent)
     this->setLayout(mainLayout);
     //MAIN LAYOUT
 
-    QObject::connect(SignupButton, &QPushButton::clicked, [&](){
+
+}
+
+void SignupWindow::refreshPage(){
+    SigningLabel->setText("Create an account and register courses");
+    SigningLabel->setFont(QFont("Times", 25));
+
+    first_name->setText("First name");
+    first_name->setFont(QFont("Times"));
+
+    firstNameLE->setPlaceholderText("Required");
+    firstNameLE->setFont(QFont("Times"));
+
+    middle_name->setText("Middle name");
+    middle_name->setFont(QFont("Times"));
+
+    middleNameLE->setPlaceholderText("Optional");
+    middleNameLE->setFont(QFont("Times"));
+
+    last_name->setText("Last name");
+    last_name->setFont(QFont("Times"));
+    lastNameLE->setPlaceholderText("Required");
+    lastNameLE->setFont(QFont("Times"));
+
+    userName->setText("Username");
+    userName->setFont(QFont("Times"));
+
+    gender->setText("Select your gender");
+    gender->setFont(QFont("Times"));
+
+    gen->addItem("Male");
+    gen->addItem("Female");
+    gen->addItem("Prefer not to say");
+
+    department->setText("Department");
+    department->setFont(QFont("Times"));
+
+    dept->addItem("Agric Engineering");
+    dept->addItem("Chemical Engineering");
+    dept->addItem("Computer Engineering");
+    dept->addItem("Civil Engineering");
+    dept->addItem("Electrical/Electronics Engineering");
+    dept->addItem("Marine Engineering");
+    dept->addItem("Mechanical Engineering");
+    dept->addItem("Petroleum");
+
+    level->setText("Level");
+    level->setFont(QFont("Times"));
+
+    lvl->addItem("100");
+    lvl->addItem("200");
+    lvl->addItem("300");
+    lvl->addItem("400");
+    lvl->addItem("500");
+
+    matricNO->setText("Matriculation Number");
+    matricNO->setFont(QFont("Times"));
+
+    mn->setPlaceholderText("Enter the four digits in your MAT. NO.");
+    mn->setFont(QFont("Times"));
+
+    univer->setText("University");
+    univer->setFont(QFont("Times"));
+    uni->addItem("Rivers State University");
+
+    email_add->setText("Email");
+    email_add->setFont(QFont("Times"));
+
+    em->setPlaceholderText("Required");
+    em->setFont(QFont("Times"));
+
+    phone_no->setText("Phone number");
+    phone_no->setFont(QFont("Times"));
+
+    pn->setPlaceholderText("Required");
+    pn->setFont(QFont("Times"));
+
+    loginButton->setText("Already have an account");
+
+    SignupButton->setText("Sign up");
+
+    password1->setText("Password");
+    password1->setFont(QFont("Times"));
+
+    pass1->setPlaceholderText("Enter new password");
+    pass1->setEchoMode(QLineEdit::Password);
+    pass1->setFont(QFont("Times"));
+
+    password2->setText("Re-enter Password");
+    password2->setFont(QFont("Times"));
+
+    pass2->setPlaceholderText("Enter password again");
+    pass2->setEchoMode(QLineEdit::Password);
+    pass2->setFont(QFont("Times"));
+
+    QObject::connect(SignupButton, &QPushButton::clicked, [this](){
         QString f_name = firstNameLE->text();
         QString m_name = middleNameLE->text();
         QString l_name = lastNameLE->text();
@@ -326,25 +340,25 @@ SignupWindow::SignupWindow(QWidget *parent)
         else{
             json_reader = {
                 {"users", {
-                    {"user_name", user_name.toStdString()},
-                    {"role", "student"}
-                }},
+                              {"user_name", user_name.toStdString()},
+                              {"role", "student"}
+                          }},
                 {"student",{
-                    {"mat_no", mat_no.toStdString()},
-                    {"first_name", f_name.toStdString()},
-                    {"middle_name", m_name.toStdString()},
-                    {"last_name", l_name.toStdString()},
-                    {"sex", gen_v.toStdString()},
-                    {"dept", dept_v.toStdString()},
-                    {"level", level_v},
-                    {"email", email_v.toStdString()},
-                    {"phone_no", phone_no_v.toLongLong()},
-                    {"user_name", user_name.toStdString()},
-                    {"school_id", 100001}
-                }},
+                                {"mat_no", mat_no.toStdString()},
+                                {"first_name", f_name.toStdString()},
+                                {"middle_name", m_name.toStdString()},
+                                {"last_name", l_name.toStdString()},
+                                {"sex", gen_v.toStdString()},
+                                {"dept", dept_v.toStdString()},
+                                {"level", level_v},
+                                {"email", email_v.toStdString()},
+                                {"phone_no", phone_no_v.toLongLong()},
+                                {"user_name", user_name.toStdString()},
+                                {"school_id", 100001}
+                            }},
                 {"raw", {
-                    {"password", pass1->text().toStdString()}
-                }}
+                            {"password", pass1->text().toStdString()}
+                        }}
             };
 
             //for transferring the json data to the server

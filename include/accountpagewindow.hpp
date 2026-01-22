@@ -29,13 +29,13 @@ public:
     nlohmann::json dataM;
     void refreshPage();
     void reset();
+    QTableWidget* scheTable;
 
 private:
     QLabel* mainText;
     QTableWidget* table;
 
     QLabel* scheduleLabel;
-    QTableWidget* scheTable;
 
     QVBoxLayout* mainLayout;
 

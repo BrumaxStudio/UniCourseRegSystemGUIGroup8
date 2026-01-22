@@ -19,11 +19,11 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
 
     logOutPB = new QPushButton(this);
     logOutPB->setFont(QFont("Times"));
-    logOutPB->setText("Log Out");
+    logOutPB->setText("Log In");
 
     SignInPB = new QPushButton(this);
     SignInPB->setFont(QFont("Times"));
-    SignInPB->setText("Sign In");
+    SignInPB->setText("Sign Up");
 
     LOSI = new QHBoxLayout;
     LOSI->addWidget(logOutPB);
@@ -83,17 +83,18 @@ void AccountPageWindow::refreshPage(){
         std::cout << "Empty Record" << std::endl;
     }
 
-    QObject::connect(logOutPB, &QPushButton::clicked, [&](){
+    QObject::connect(logOutPB, &QPushButton::clicked, [this](){
         emit login_page();
     });
 
-    QObject::connect(SignInPB, &QPushButton::clicked, [&](){
+    QObject::connect(SignInPB, &QPushButton::clicked, [this](){
         emit signup_page();
     });
 }
 
 void AccountPageWindow::reset(){
     table->clear();
+    scheTable->setRowCount(0);
     scheTable->clear();
 }
 

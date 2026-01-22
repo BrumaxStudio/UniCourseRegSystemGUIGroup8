@@ -39,6 +39,8 @@ signals:
 
 public:
     void reset();
+    void refreshPage();
+
     QString ipAddress;
     QString portNumber;
     nlohmann::json serverResponse;

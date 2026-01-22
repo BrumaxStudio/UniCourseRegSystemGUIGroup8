@@ -97,7 +97,9 @@ void LoginWindow::refreshPage(){
     loginButton->setText("Login");
     SignupButton->setText("Sign up");
 
-    QObject::connect(loginButton, &QPushButton::clicked, [&](){
+    disconnect(loginConnection);
+
+    loginConnection = QObject::connect(loginButton, &QPushButton::clicked, [this](){
         QString username = entryForUserName->text();
         QString password = entryForPassword->text();
 
@@ -153,7 +155,9 @@ void LoginWindow::refreshPage(){
         }
     });
 
-    QObject::connect(SignupButton, &QPushButton::clicked, [&](){
+    QObject::disconnect(SignupConnection);
+
+    SignupConnection = QObject::connect(SignupButton, &QPushButton::clicked, [this](){
         QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
         emit signup_page();
     });

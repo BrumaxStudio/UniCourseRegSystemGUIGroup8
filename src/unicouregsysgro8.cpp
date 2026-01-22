@@ -26,6 +26,7 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
     QObject::connect(log, &LoginWindow::signup_page, this, [this](){
         screenChanger->setCurrentWidget(sig);
         log->reset();
+        sig->refreshPage();
     });
 
     //Resets page and redirects page to the account page
@@ -54,6 +55,7 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
     QObject::connect(acc, &AccountPageWindow::signup_page, this, [this](){
         screenChanger->setCurrentWidget(sig);
         acc->reset();
+        sig->refreshPage();
     });
 }
 

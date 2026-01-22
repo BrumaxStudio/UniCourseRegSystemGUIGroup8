@@ -36,6 +36,9 @@ public:
     QString portNumber;
     nlohmann::json serverResponse;
 
+    QMetaObject::Connection loginConnection;
+    QMetaObject::Connection SignupConnection;
+
 private:
     nlohmann::json reader_json;
 
