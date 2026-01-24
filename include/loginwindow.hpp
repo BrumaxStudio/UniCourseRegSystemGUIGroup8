@@ -44,7 +44,8 @@ public:
 
 private:
     nlohmann::json reader_json;
-    std::jthread worker;
+    int loginCount;
+    int signupCount;
 
     QLabel* rsuLogo;
 

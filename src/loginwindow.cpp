@@ -97,9 +97,12 @@ void LoginWindow::refreshPage(){
     loginButton->setText("Login");
     SignupButton->setText("Sign up");
 
+    loginCount = 0;
+
     disconnect(loginConnection);
 
     loginConnection = QObject::connect(loginButton, &QPushButton::clicked, [this](){
+
         QString username = entryForUserName->text();
         QString password = entryForPassword->text();
 
@@ -122,12 +125,15 @@ void LoginWindow::refreshPage(){
 
                 if(response){
                     if(response->status == 200){
+                        self->loginCount++;
                         self->serverResponse = nlohmann::json::parse(response->body);
                         std::cout << termcolor::green << "Success: " << self->serverResponse["message"] << termcolor::reset << std::endl;
                         QMetaObject::invokeMethod(self, [self, st](){
                             if(st.stop_requested()) std::exit(0);
-                            QMessageBox::information(self, "Success", "Successfully logged in, redirecting page now...");
-                            emit self->account_page();
+                            if(self->loginCount == 1){
+                                QMessageBox::information(self, "Success", "Successfully logged in, redirecting page now...");
+                                emit self->account_page();
+                            }
                         }, Qt::QueuedConnection);
                     }
                     else{
@@ -151,10 +157,15 @@ void LoginWindow::refreshPage(){
         }
     });
 
+
+    signupCount = 0;
     QObject::disconnect(SignupConnection);
 
     SignupConnection = QObject::connect(SignupButton, &QPushButton::clicked, [this](){
-        QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
-        emit signup_page();
+        signupCount++;
+        if(signupCount == 1){
+            QMessageBox::information(this, "Sign Up", "Redirecting to Sign up page");
+            emit signup_page();
+        }
     });
 }

@@ -84,7 +84,6 @@ void AccountPageWindow::refreshPage(){
         for(int i = 0; i < scheTable->columnCount(); i++){
             auto* item = scheTable->horizontalHeaderItem(i);
             if(item){
-                //item->setForeground((i % 2)? Qt::red: Qt::blue);
                 item->setBackground((i % 2)? Qt::white: Qt::gray);
             }
         }
