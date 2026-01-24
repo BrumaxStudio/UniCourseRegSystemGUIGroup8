@@ -32,11 +32,11 @@ int main(int argc, char *argv[])
     std::cout << termcolor::green << "RSU-CPE311" << termcolor::reset << std::endl;
     std::cout << termcolor::green << "Graphical User Interface designed using Qt6" << termcolor::reset << std::endl;
 
-    UniCouRegSysGro8 window;
-
     std::string arg1 = program.get<std::string>("-ip"), arg2 = program.get<std::string>("-p");
 
-    window.passToServer(arg1, arg2);
+    UniCouRegSysGro8 window(QString::fromStdString(arg1), QString::fromStdString(arg2));
+
+    //window.passToServer(arg1, arg2);
     window.resize(800, 600);
     window.setWindowTitle("University Course Registration System - Group 8");
     window.show();

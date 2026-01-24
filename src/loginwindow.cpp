@@ -110,48 +110,44 @@ void LoginWindow::refreshPage(){
             reader_json["user_name"] = username.toStdString();
             reader_json["raw_password"] = password.toStdString();
 
-            //for transferring the json data to the server
-            QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
+            QPointer<LoginWindow> self(this);
 
-            std::cout << reader_json.dump() << std::endl;
+            std::jthread([self](std::stop_token st){
+                if(st.stop_requested()) std::exit(0);
 
-            //can only transfer raw bytes
-            QByteArray data = QByteArray::fromStdString(reader_json.dump());
+                QString Url = QString("http://%1:%2").arg(self->ipAddress, self->portNumber);
 
-            //envelope for sending request
-            QNetworkRequest request(QUrl(QString("http://%1:%2/login/student").arg(ipAddress, portNumber)));//"http://" + ipAddress + ":" + portNumber + "register"));
-            //request type
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+                httplib::Client client(Url.toStdString());
+                auto response = client.Post("/login/student", self->reader_json.dump(), "application/json");
 
-            //object for receiving the server's reply
-            QNetworkReply* reply = clientApp->post(request, data);
-
-            //does stuff when the server replies
-            QObject::connect(reply, &QNetworkReply::finished, this, [this, reply]{
-                //gets connection code
-                int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-                //checks if an error was returned and if the status code is equal to 200
-                if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
-                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
-
-                    QMessageBox::information(this, "Success", "Successfully logged in, redirecting page now...");
-                    emit account_page();
-                }
-                else if(reply->error() == QNetworkReply::ConnectionRefusedError){
-                    //auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Server Error", "Server is down, contact support or wait");
+                if(response){
+                    if(response->status == 200){
+                        self->serverResponse = nlohmann::json::parse(response->body);
+                        std::cout << termcolor::green << "Success: " << self->serverResponse["message"] << termcolor::reset << std::endl;
+                        QMetaObject::invokeMethod(self, [self, st](){
+                            if(st.stop_requested()) std::exit(0);
+                            QMessageBox::information(self, "Success", "Successfully logged in, redirecting page now...");
+                            emit self->account_page();
+                        }, Qt::QueuedConnection);
+                    }
+                    else{
+                        self->serverResponse = nlohmann::json::parse(response->body);
+                        std::cerr << termcolor::red << "Message: " << self->serverResponse["message"] << termcolor::reset << std::endl;
+                        QMetaObject::invokeMethod(self, [self, st](){
+                            if(st.stop_requested()) std::exit(0);
+                            QMessageBox::warning(self, "Error", QString::fromStdString(self->serverResponse["message"]));
+                        }, Qt::QueuedConnection);
+                    }
                 }
                 else{
-                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Error", QString::fromStdString(serverResponse["message"]));
+                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                    QMetaObject::invokeMethod(self, [self, st](){
+                        if(st.stop_requested()) std::exit(0);
+                        QMessageBox::warning(self, "Server Error", "Server is down, contact support or wait");
+                    }, Qt::QueuedConnection);
                 }
 
-                reply->deleteLater();
-            });
+            }).detach();
         }
     });
 

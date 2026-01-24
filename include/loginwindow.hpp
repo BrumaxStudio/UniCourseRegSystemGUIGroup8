@@ -13,11 +13,14 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QPointer>
 
 #include <nlohmann/json.hpp>
 #include <termcolor/termcolor.hpp>
+#include <httplib.h>
 
 #include <iostream>
+#include <thread>
 
 class LoginWindow : public QWidget
 {
@@ -41,6 +44,7 @@ public:
 
 private:
     nlohmann::json reader_json;
+    std::jthread worker;
 
     QLabel* rsuLogo;
 

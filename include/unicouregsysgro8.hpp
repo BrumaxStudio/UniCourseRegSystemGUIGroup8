@@ -16,7 +16,7 @@ class UniCouRegSysGro8 : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit UniCouRegSysGro8(QWidget *parent = nullptr);
+    explicit UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidget *parent = nullptr);
 
 private:
     QStackedWidget* screenChanger;

@@ -30,12 +30,14 @@ public:
     void refreshPage();
     void reset();
     QTableWidget* scheTable;
+    QTableWidget* enrolledScheTable;
 
 private:
     QLabel* mainText;
     QTableWidget* table;
 
     QLabel* scheduleLabel;
+    QLabel* enrolledScheduleLabel;
 
     QVBoxLayout* mainLayout;
 

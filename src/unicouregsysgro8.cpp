@@ -1,12 +1,18 @@
 #include "unicouregsysgro8.hpp"
 
-UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
+UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidget *parent)
     : QMainWindow{parent}
 {
     screenChanger = new QStackedWidget(this);
     log = new LoginWindow(this);
     sig = new SignupWindow(this);
     acc = new AccountPageWindow(this);
+
+    log->ipAddress = ipAddress;
+    log->portNumber = portNumber;
+
+    sig->ipAddress = ipAddress;
+    sig->portNumber = portNumber;
 
     screenChanger->addWidget(log);
     screenChanger->addWidget(sig);
@@ -57,16 +63,4 @@ UniCouRegSysGro8::UniCouRegSysGro8(QWidget *parent)
         acc->reset();
         sig->refreshPage();
     });
-}
-
-void UniCouRegSysGro8::connectToServer(std::string ipAddress, std::string portNumber){
-    sig->ipAddress = QString::fromStdString(ipAddress);
-    sig->portNumber = QString::fromStdString(portNumber);
-
-    log->ipAddress = QString::fromStdString(ipAddress);
-    log->portNumber = QString::fromStdString(portNumber);
-}
-
-void UniCouRegSysGro8::passToServer(std::string ipAddress, std::string portNumber){
-    this->connectToServer(ipAddress, portNumber);
 }
