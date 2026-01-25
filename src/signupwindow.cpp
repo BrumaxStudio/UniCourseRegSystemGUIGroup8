@@ -38,6 +38,11 @@ SignupWindow::SignupWindow(QWidget *parent)
     gen = new QComboBox(this);
     //Gender/Sex
 
+    //Date of Birth
+    date_of_birth = new QLabel(this);
+    birth = new QDateEdit(QDate::currentDate(), this);
+    //Date of Birth
+
     //Department
     department = new QLabel(this);
     dept = new QComboBox(this);
@@ -126,6 +131,12 @@ SignupWindow::SignupWindow(QWidget *parent)
     genderLayout->addWidget(gen);
     //GENDER  LAYOUT
 
+    //DATE OF BIRTH LAYOUT
+    birth_layout = new QHBoxLayout;
+    birth_layout->addWidget(date_of_birth);
+    birth_layout->addWidget(birth);
+    //DATE OF BIRTH LAYOUT
+
     //DEPARTMENT LAYOUT
     deptLayout = new QHBoxLayout;
     deptLayout->addWidget(department);
@@ -169,6 +180,7 @@ SignupWindow::SignupWindow(QWidget *parent)
     mainLayout->addLayout(lastNameLayout);
     mainLayout->addLayout(userNameLayout);
     mainLayout->addLayout(genderLayout);
+    mainLayout->addLayout(birth_layout);
     mainLayout->addLayout(uniLayout);
     mainLayout->addLayout(deptLayout);
     mainLayout->addLayout(levelLayout);
@@ -214,6 +226,12 @@ void SignupWindow::refreshPage(){
     gen->addItem("Male");
     gen->addItem("Female");
     gen->addItem("Prefer not to say");
+
+    date_of_birth->setText("Date of Birth");
+    date_of_birth->setFont(QFont("Times"));
+
+    birth->setCalendarPopup(true);
+    birth->setDisplayFormat("dd-MM-yyyy");
 
     department->setText("Department");
     department->setFont(QFont("Times"));
@@ -276,7 +294,11 @@ void SignupWindow::refreshPage(){
     pass2->setEchoMode(QLineEdit::Password);
     pass2->setFont(QFont("Times"));
 
-    QObject::connect(SignupButton, &QPushButton::clicked, [this](){
+    signupCount = 0;
+
+    QObject::disconnect(SignupConnection);
+
+    SignupConnection = QObject::connect(SignupButton, &QPushButton::clicked, [this](){
         QString f_name = firstNameLE->text();
         QString m_name = middleNameLE->text();
         QString l_name = lastNameLE->text();
@@ -284,6 +306,7 @@ void SignupWindow::refreshPage(){
         QString user_name = un->text();
 
         QString gen_v = gen->currentText();
+        QString dob_v = birth->date().toString("yyyy-MM-dd");
         QString dept_v = dept->currentText();
 
         int level_v = 0;
@@ -317,20 +340,22 @@ void SignupWindow::refreshPage(){
         QString password_1_v = pass1->text();
         QString password_2_v = pass2->text();
 
-        if(!pnv || !mnv || f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
+        if(!emailValidator(email_v) || !phoneNoValidator(phone_no_v) || !matNoValidator(mn->text()) || f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
             if(f_name.isEmpty() || l_name.isEmpty() || user_name.isEmpty() || email_v.isEmpty() || phone_no_v.isEmpty() || password_1_v.isEmpty() || password_2_v.isEmpty() || mat_no.isEmpty()){
                 QMessageBox::warning(this, "Error", "Incomplete Details!");
             }
-            else {
-                if(!pnv && mnv){
+            else if(!emailValidator(email_v) || !phoneNoValidator(phone_no_v) || !matNoValidator(mn->text())) {
+                if(!phoneNoValidator(phone_no_v) && emailValidator(email_v) && matNoValidator(mn->text())){
                     QMessageBox::warning(this, "Error", "Invalid phone number!");
                 }
-                else if(!mnv && pnv){
+                else if(!matNoValidator(mn->text()) && emailValidator(email_v) && phoneNoValidator(phone_no_v)){
                     QMessageBox::warning(this, "Error", "Invalid matric number!");
                 }
-                else if(!pnv && !mnv ){
-                    if(phone_no_v.isEmpty() || mat_no.isEmpty()) QMessageBox::warning(this, "Error", "Incomplete Details!");
-                    else if(!phone_no_v.isEmpty() && !mat_no.isEmpty()) QMessageBox::warning(this, "Error", "Invalid phone and matric number!");
+                else if(!emailValidator(email_v) && matNoValidator(mn->text()) && phoneNoValidator(phone_no_v)){
+                    QMessageBox::warning(this, "Error", "Invalid email address!");
+                }
+                else{
+                    QMessageBox::warning(this, "Error", "Invalid phone and/or matric number and/or email address!");
                 }
             }
         }
@@ -338,7 +363,7 @@ void SignupWindow::refreshPage(){
             QMessageBox::warning(this, "Error", "Passwords don't match!");
         }
         else{
-            json_reader = {
+            reader_json = {
                 {"users", {
                               {"user_name", user_name.toStdString()},
                               {"role", "student"}
@@ -349,6 +374,7 @@ void SignupWindow::refreshPage(){
                                 {"middle_name", m_name.toStdString()},
                                 {"last_name", l_name.toStdString()},
                                 {"sex", gen_v.toStdString()},
+                                {"date_of_birth", dob_v.toStdString()},
                                 {"dept", dept_v.toStdString()},
                                 {"level", level_v},
                                 {"email", email_v.toStdString()},
@@ -361,51 +387,59 @@ void SignupWindow::refreshPage(){
                         }}
             };
 
-            //for transferring the json data to the server
-            QNetworkAccessManager* clientApp = new QNetworkAccessManager(this);
-            //can only transfer raw bytes
-            QByteArray data = QByteArray::fromStdString(json_reader.dump());
+            QPointer<SignupWindow> self(this);
 
-            //envelope for sending request
-            QNetworkRequest request(QUrl(QString("http://%1:%2/register").arg(ipAddress, portNumber)));//"http://" + ipAddress + ":" + portNumber + "register"));
-            //request type
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            std::jthread([self](std::stop_token st){
+                if(st.stop_requested()) std::exit(0);
 
-            //object for receiving the server's reply
-            QNetworkReply* reply = clientApp->post(request, data);
+                QString Url = QString("http://%1:%2").arg(self->ipAddress, self->portNumber);
 
-            //does stuff when the server replies
-            QObject::connect(reply, &QNetworkReply::finished, this, [this, reply]{
-                //gets connection code
-                int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+                httplib::Client client(Url.toStdString());
+                auto response = client.Post("/register", self->reader_json.dump(), "application/json");
 
-                //checks if an error was returned and if the status code is equal to 200
-                if(reply->error() == QNetworkReply::NoError && (statusCode == 200 || statusCode == 201)){
-                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cout << termcolor::green << "Success: " << serverResponse["message"] << termcolor::reset << std::endl;
-
-                    QMessageBox::information(this, "Success", "Successfully created account, redirecting page now...");
-                    emit account_page();
-                }
-                else if(reply->error() == QNetworkReply::ConnectionRefusedError){
-                    //auto serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Server Error", "Server is down, contact support or wait");
+                if(response){
+                    if(response->status == 200){
+                        //self->signupCount++;
+                        self->serverResponse = nlohmann::json::parse(response->body);
+                        std::cout << termcolor::green << "Success: " << self->serverResponse["message"] << termcolor::reset << std::endl;
+                        QMetaObject::invokeMethod(self, [self, st](){
+                            if(st.stop_requested()) std::exit(0);
+                            //if(self->signupCount == 1){
+                                QMessageBox::information(self, "Success", "Successfully created an account, redirecting page now...");
+                                emit self->account_page();
+                            //}
+                        }, Qt::QueuedConnection);
+                    }
+                    else{
+                        self->serverResponse = nlohmann::json::parse(response->body);
+                        std::cerr << termcolor::red << "Message: " << self->serverResponse["message"] << termcolor::reset << std::endl;
+                        QMetaObject::invokeMethod(self, [self, st](){
+                            if(st.stop_requested()) std::exit(0);
+                            QMessageBox::warning(self, "Error", QString::fromStdString(self->serverResponse["message"]));
+                        }, Qt::QueuedConnection);
+                    }
                 }
                 else{
-                    serverResponse = nlohmann::json::parse(reply->readAll().toStdString());
-                    std::cerr << termcolor::red << "Message: " << serverResponse["message"]/*"Failed to create an account"*/ << termcolor::reset << std::endl;
-                    QMessageBox::warning(this, "Error", "Failed to create account");
+                    std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                    QMetaObject::invokeMethod(self, [self, st](){
+                        if(st.stop_requested()) std::exit(0);
+                         QMessageBox::warning(self, "Server Error", "Server is down, contact support or wait");
+                     }, Qt::QueuedConnection);
                 }
 
-                reply->deleteLater();
-            });
+            }).detach();
         }
     });
 
-    QObject::connect(loginButton, &QPushButton::clicked, [&](){
-        QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
-        emit login_page();
+    loginCount = 0;
+    QObject::disconnect(loginConnection);
+
+    loginConnection = QObject::connect(loginButton, &QPushButton::clicked, [&](){
+        loginCount++;
+        if(loginCount == 1){
+            QMessageBox::information(this, "Sign Up", "Redirecting to Login page");
+            emit login_page();
+        }
     });
 }
 

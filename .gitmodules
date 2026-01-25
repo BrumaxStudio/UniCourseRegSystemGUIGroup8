@@ -10,3 +10,6 @@
 [submodule "third_party/cpp-httplib"]
 	path = third_party/cpp-httplib
 	url = git@github.com:lil-brumski/cpp-httplib.git
+[submodule "third_party/regex"]
+	path = third_party/regex
+	url = git@github.com:lil-brumski/regex.git

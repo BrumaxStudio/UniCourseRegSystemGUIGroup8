@@ -10,9 +10,6 @@
 #include <QMessageBox>
 #include <QString>
 #include <QComboBox>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QPointer>
 
 #include <nlohmann/json.hpp>

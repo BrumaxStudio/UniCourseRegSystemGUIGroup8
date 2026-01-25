@@ -7,7 +7,7 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     mainText->setFont(QFont("Times", 25));
     mainText->setText("Student Course Registration");
     table = new QTableWidget(this);
-    table->setColumnCount(10);
+    table->setColumnCount(11);
 
     scheduleLabel = new QLabel(this);
     scheduleLabel->setFont(QFont("Times", 18));
@@ -52,7 +52,7 @@ void AccountPageWindow::refreshPage(){
         auto data = dataM["data"];
         auto scheDataList = dataM["schedule"];
 
-        QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Department", "Level", "Email Address", "Phone Number", "School Name"};
+        QStringList headers = {"Matric No", "First", "Middle Name", "Last Name", "Sex", "Date of Birth", "Department", "Level", "Email Address", "Phone Number", "School Name"};
         table->setHorizontalHeaderLabels(headers);
         table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -63,7 +63,6 @@ void AccountPageWindow::refreshPage(){
         for(int i = 0; i < table->columnCount(); i++){
             auto* item = table->horizontalHeaderItem(i);
             if(item){
-                //item->setForeground((i % 2)? Qt::red: Qt::blue);
                 item->setBackground((i % 2)? Qt::white: Qt::gray);
             }
         }
@@ -75,11 +74,12 @@ void AccountPageWindow::refreshPage(){
         table->setItem(0, 2, new QTableWidgetItem(QString::fromStdString(data.at("middle_name").get<std::string>())));
         table->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(data.at("last_name").get<std::string>())));
         table->setItem(0, 4, new QTableWidgetItem(QString::fromStdString(data.at("sex").get<std::string>())));
-        table->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(data.at("dept").get<std::string>())));
-        table->setItem(0, 6, new QTableWidgetItem(QString::number(data.at("level").get<int>())));
-        table->setItem(0, 7, new QTableWidgetItem(QString::fromStdString(data.at("email").get<std::string>())));
-        table->setItem(0, 8, new QTableWidgetItem(QString::number(data.at("phone_no").get<long long>())));
-        table->setItem(0, 9, new QTableWidgetItem(QString::fromStdString(data.at("name").get<std::string>())));
+        table->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(data.at("date_of_birth").get<std::string>())));
+        table->setItem(0, 6, new QTableWidgetItem(QString::fromStdString(data.at("dept").get<std::string>())));
+        table->setItem(0, 7, new QTableWidgetItem(QString::number(data.at("level").get<int>())));
+        table->setItem(0, 8, new QTableWidgetItem(QString::fromStdString(data.at("email").get<std::string>())));
+        table->setItem(0, 9, new QTableWidgetItem("0" + QString::number(data.at("phone_no").get<long long>())));
+        table->setItem(0, 10, new QTableWidgetItem(QString::fromStdString(data.at("name").get<std::string>())));
 
         for(int i = 0; i < scheTable->columnCount(); i++){
             auto* item = scheTable->horizontalHeaderItem(i);

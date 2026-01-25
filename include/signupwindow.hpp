@@ -13,19 +13,20 @@
 #include <QString>
 #include <QPointer>
 #include <QByteArray>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
+#include <QDateEdit>
 
 #include <thread>
 #include <chrono>
 #include <fstream>
 #include <string>
 #include <expected>
+#include <type_traits>
 
 #include "nlohmann/json.hpp"
 #include "termcolor/termcolor.hpp"
-#include <type_traits>
+#include "httplib.h"
+
+#include <boost/regex.hpp>
 
 class SignupWindow : public QWidget
 {
@@ -45,7 +46,41 @@ public:
     QString portNumber;
     nlohmann::json serverResponse;
 
+    QMetaObject::Connection loginConnection;
+    QMetaObject::Connection SignupConnection;
+
 private:
+    bool emailValidator(QString emailAddress){
+        const boost::regex em(R"(^[A-Za-z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$)");
+        return boost::regex_match(emailAddress.toStdString(), em);
+    }
+
+    bool phoneNoValidator(QString phoneNo){
+        [[maybe_unused]] int pn = 0;
+        try {
+            pn = phoneNo.toLongLong();
+        }
+        catch (const std::exception& error) {
+            return false;
+        }
+
+        const boost::regex pnchecker(R"(^\d{11}$)");
+        return boost::regex_match(phoneNo.toStdString(), pnchecker);
+    }
+
+    bool matNoValidator(QString matNo){
+        [[maybe_unused]] int mn = 0;
+        try {
+            mn = matNo.toInt();
+        }
+        catch (const std::exception& error) {
+            return false;
+        }
+
+        const boost::regex mnchecker(R"(^\d{4}$)");
+        return boost::regex_match(matNo.toStdString(), mnchecker);
+    }
+
     template<class T> std::expected<T, bool> getInput(QLineEdit* LE){
         int good = 0;
         bool  bad = false;
@@ -67,7 +102,10 @@ private:
 
 private:
     std::jthread hash_thread;
-    nlohmann::json json_reader;
+    nlohmann::json reader_json;
+
+    int loginCount;
+    int signupCount;
 
     QLabel* SigningLabel;
 
@@ -80,6 +118,10 @@ private:
     QLineEdit* firstNameLE;
     QLineEdit* middleNameLE;
     QLineEdit* lastNameLE;
+
+    QLabel* date_of_birth;
+    QDateEdit* birth;
+    QHBoxLayout* birth_layout;
 
     QLabel* gender;
     QComboBox* gen;
