@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(creg8_gui VERSION 2026.1.24 LANGUAGES CXX)
+project(creg8_gui VERSION 2026.1.25 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,8 +9,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_BUILD_PARALLEL 8)
 set(APPLICATION_NAME "creg8-gui")
+set(BOOST_REGEX_STANDALONE ON CACHE BOOL "Build Boost.Regex in standalone mode")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 configure_file(creg8Version.h.in ${PROJECT_BINARY_DIR}/creg8Version.h)
 
@@ -18,6 +19,7 @@ add_subdirectory(third_party/json)
 add_subdirectory(third_party/termcolor)
 add_subdirectory(third_party/argparse)
 add_subdirectory(third_party/cpp-httplib)
+add_subdirectory(third_party/regex)
 
 set(SRC_FILES
     include/loginwindow.hpp
@@ -46,7 +48,7 @@ if(LINUX)
         -Wall
         -Wextra
         -Werror
-        -Wpedantic
+        -Wpedantic  
     )
 endif(LINUX)
 
@@ -58,6 +60,7 @@ set_target_properties(${APPLICATION_NAME} PROPERTIES
 target_include_directories(${APPLICATION_NAME}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/regex/include
     ${PROJECT_BINARY_DIR}
 )
 
@@ -66,9 +69,9 @@ target_link_libraries(${APPLICATION_NAME}
     Qt6::Core
     Qt6::Widgets
     Qt6::Gui
-    Qt6::Network
     nlohmann_json
     termcolor
     argparse
     httplib
+    Boost::regex
 )
