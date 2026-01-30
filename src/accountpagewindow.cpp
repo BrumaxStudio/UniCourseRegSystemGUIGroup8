@@ -124,16 +124,16 @@ void AccountPageWindow::refreshPage(){
                 enrolledScheTable->setItem(x, 0, new QTableWidgetItem(QString::number(scheData["schedule_id"].get<int>())));
                 enrolledScheTable->setItem(x, 1, new QTableWidgetItem(QString::fromStdString(scheData["day_of_week"].get<std::string>())));
                 enrolledScheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["start_time"].get<std::string>())));
-                enrolledScheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["end_time"].get<std::string>())));
-                enrolledScheTable->setItem(x, 3, new QTableWidgetItem(QString::fromStdString(scheData["venue"].get<std::string>())));
-                enrolledScheTable->setItem(x, 4, new QTableWidgetItem(QString::fromStdString(scheData["name"].get<std::string>())));
-                enrolledScheTable->setItem(x, 5, new QTableWidgetItem(QString::fromStdString(scheData["course_code"].get<std::string>())));
-                enrolledScheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["course_title"].get<std::string>())));
-                enrolledScheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["current_enrollment"].get<std::string>())));
-                enrolledScheTable->setItem(x, 2, new QTableWidgetItem(QString::fromStdString(scheData["max_capacity"].get<std::string>())));
-                enrolledScheTable->setItem(x, 6, new QTableWidgetItem(QString::fromStdString(scheData["grade"].get<std::string>())));
-                enrolledScheTable->setItem(x, 7, new QTableWidgetItem(QString::fromStdString(scheData["date_enrolled"].get<std::string>())));
-                enrolledScheTable->setItem(x, 8, new QTableWidgetItem(QString::fromStdString(scheData["enrollment_status"].get<std::string>())));
+                enrolledScheTable->setItem(x, 3, new QTableWidgetItem(QString::fromStdString(scheData["end_time"].get<std::string>())));
+                enrolledScheTable->setItem(x, 4, new QTableWidgetItem(QString::fromStdString(scheData["venue"].get<std::string>())));
+                enrolledScheTable->setItem(x, 5, new QTableWidgetItem(QString::fromStdString(scheData["name"].get<std::string>())));
+                enrolledScheTable->setItem(x, 6, new QTableWidgetItem(QString::fromStdString(scheData["course_code"].get<std::string>())));
+                enrolledScheTable->setItem(x, 7, new QTableWidgetItem(QString::fromStdString(scheData["course_title"].get<std::string>())));
+                enrolledScheTable->setItem(x, 8, new QTableWidgetItem(QString::fromStdString(scheData["current_enrollment"].get<std::string>())));
+                enrolledScheTable->setItem(x, 9, new QTableWidgetItem(QString::fromStdString(scheData["max_capacity"].get<std::string>())));
+                enrolledScheTable->setItem(x, 10, new QTableWidgetItem(QString::fromStdString(scheData["grade"].get<std::string>())));
+                enrolledScheTable->setItem(x, 11, new QTableWidgetItem(QString::fromStdString(scheData["date_enrolled"].get<std::string>())));
+                enrolledScheTable->setItem(x, 12, new QTableWidgetItem(QString::fromStdString(scheData["enrollment_status"].get<std::string>())));
             }
         }
 
