@@ -14,6 +14,9 @@ UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidge
     sig->ipAddress = ipAddress;
     sig->portNumber = portNumber;
 
+    acc->ipAddress = ipAddress;
+    acc->portNumber = portNumber;
+
     screenChanger->addWidget(log);
     screenChanger->addWidget(sig);
     screenChanger->addWidget(acc);
@@ -22,7 +25,10 @@ UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidge
 
     //Resets page and redirects page to the account page
     QObject::connect(log, &LoginWindow::account_page, this, [this](){
-        if(!log->serverResponse.empty()) acc->dataM = log->serverResponse;
+        if(!log->serverResponse.empty()){
+            acc->dataM = log->serverResponse;
+            acc->userName = QString::fromStdString(log->reader_json["user_name"].get<std::string>());
+        }
         acc->refreshPage();
         screenChanger->setCurrentWidget(acc);
         log->reset();
@@ -37,7 +43,10 @@ UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidge
 
     //Resets page and redirects page to the account page
     QObject::connect(sig, &SignupWindow::account_page, this, [this](){
-        if(!sig->serverResponse.empty()) acc->dataM = sig->serverResponse;
+        if(!sig->serverResponse.empty()){
+            acc->dataM = sig->serverResponse;
+            acc->userName = QString::fromStdString(sig->reader_json["student"]["user_name"]);
+        }
         acc->refreshPage();
         screenChanger->setCurrentWidget(acc);
         sig->reset();
@@ -62,5 +71,16 @@ UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidge
         screenChanger->setCurrentWidget(sig);
         acc->reset();
         sig->refreshPage();
+    });
+
+    //Refreshes page
+    QObject::connect(acc, &AccountPageWindow::reload_page, this, [this](){
+        //screenChanger->setCurrentWidget(acc);
+        if(!acc->dataMMM.empty()){
+            acc->dataM = acc->dataMMM;
+            acc->userName = QString::fromStdString(acc->reader_json["user_name"].get<std::string>());
+        }
+        acc->reset();
+        acc->refreshPage();
     });
 }

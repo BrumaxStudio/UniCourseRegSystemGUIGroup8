@@ -14,7 +14,6 @@
 #include <QPointer>
 #include <QByteArray>
 #include <QDateEdit>
-
 #include <thread>
 #include <chrono>
 #include <fstream>
@@ -45,6 +44,7 @@ public:
     QString ipAddress;
     QString portNumber;
     nlohmann::json serverResponse;
+    nlohmann::json reader_json;
 
     QMetaObject::Connection loginConnection;
     QMetaObject::Connection SignupConnection;
@@ -102,7 +102,6 @@ private:
 
 private:
     std::jthread hash_thread;
-    nlohmann::json reader_json;
 
     int loginCount;
     int signupCount;

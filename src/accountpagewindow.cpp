@@ -13,7 +13,7 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     scheduleLabel->setFont(QFont("Times", 18));
     scheduleLabel->setText("Available Schedules");
     scheTable = new QTableWidget(this);
-    scheTable->setColumnCount(10);
+    scheTable->setColumnCount(11);
 
     enrolledScheduleLabel = new QLabel(this);
     enrolledScheduleLabel->setFont(QFont("Times", 18));
@@ -29,9 +29,14 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     SignInPB->setFont(QFont("Times"));
     SignInPB->setText("Sign Up");
 
+    ReLoadPB = new QPushButton(this);
+    ReLoadPB->setFont(QFont("Times"));
+    ReLoadPB->setText("Refresh Page");
+
     LOSI = new QHBoxLayout;
     LOSI->addWidget(logOutPB);
     LOSI->addWidget(SignInPB);
+    LOSI->addWidget(ReLoadPB);
 
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mainText);
@@ -43,6 +48,8 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     mainLayout->addLayout(LOSI);
 
     this->setLayout(mainLayout);
+
+    reader_json["enroll"] = nlohmann::json::array();
 }
 
 void AccountPageWindow::refreshPage(){
@@ -56,7 +63,7 @@ void AccountPageWindow::refreshPage(){
         table->setHorizontalHeaderLabels(headers);
         table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-        QStringList scheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Maximum Capacity"};
+        QStringList scheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Maximum Capacity", "Select"};
         scheTable->setHorizontalHeaderLabels(scheHeader);
         scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -91,6 +98,9 @@ void AccountPageWindow::refreshPage(){
         for(size_t x = 0; x < scheDataList.size(); x++){
             scheTable->insertRow(x);
             auto scheData = scheDataList[x];
+            auto checkBOX = new QTableWidgetItem();
+            checkBOX->setFlags(checkBOX->flags() | Qt::ItemIsUserCheckable);
+            checkBOX->setCheckState(Qt::Unchecked);
 
             scheTable->setItem(x, 0, new QTableWidgetItem(QString::number(scheData["schedule_id"].get<int>())));
             scheTable->setItem(x, 1, new QTableWidgetItem(QString::fromStdString(scheData["day_of_week"].get<std::string>())));
@@ -102,7 +112,10 @@ void AccountPageWindow::refreshPage(){
             scheTable->setItem(x, 7, new QTableWidgetItem(QString::fromStdString(scheData["course_title"].get<std::string>())));
             scheTable->setItem(x, 8, new QTableWidgetItem(QString::fromStdString(scheData["current_enrollment"].get<std::string>())));
             scheTable->setItem(x, 9, new QTableWidgetItem(QString::fromStdString(scheData["max_capacity"].get<std::string>())));
+            scheTable->setItem(x, 10, checkBOX);
         }
+
+        QObject::connect(scheTable, &QTableWidget::itemChanged, this, &AccountPageWindow::selectSchedule);
 
         QStringList enrolledScheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Max Capacity", "Grade", "Date Enrolled", "Enrollment Status"};
         enrolledScheTable->setHorizontalHeaderLabels(enrolledScheHeader);
@@ -149,14 +162,81 @@ void AccountPageWindow::refreshPage(){
     QObject::connect(SignInPB, &QPushButton::clicked, [this](){
         emit signup_page();
     });
+
+    refreshCount = 0;
+
+    QObject::disconnect(refreshMO);
+
+    refreshMO = QObject::connect(ReLoadPB, &QPushButton::clicked, [this](){
+        reader_json["user_name"] = userName.toStdString();
+
+        QPointer<AccountPageWindow> self(this);
+
+        std::jthread([self](std::stop_token st){
+            if(st.stop_requested()) std::exit(0);
+
+            QString Url = QString("http://%1:%2").arg(self->ipAddress, self->portNumber);
+
+            httplib::Client client(Url.toStdString());
+            auto response = client.Post("/refresh/page", self->reader_json.dump(), "application/json");
+
+            if(response){
+                if(response->status == 200){
+                    self->refreshCount++;
+                    self->dataMMM = nlohmann::json::parse(response->body);
+                    std::cout << termcolor::green << "Success: " << self->dataMMM["message"] << termcolor::reset << std::endl;
+                    QMetaObject::invokeMethod(self, [self, st](){
+                        if(st.stop_requested()) std::exit(0);
+                        if(self->refreshCount == 1){
+                            QMessageBox::information(self, "Success", "Refreshing page...");
+                            emit self->reload_page();
+                        }
+                    }, Qt::QueuedConnection);
+                }
+                else{
+                    self->refreshCount++;
+                    self->dataMMM = nlohmann::json::parse(response->body);
+                    if(self->refreshCount == 1){
+                        std::cerr << termcolor::red << "Message: " << self->dataMMM["message"] << termcolor::reset << std::endl;
+                        QMetaObject::invokeMethod(self, [self, st](){
+                            if(st.stop_requested()) std::exit(0);
+                            QMessageBox::warning(self, "Error", QString::fromStdString(self->dataMMM["message"]));
+                        }, Qt::QueuedConnection);
+                    }
+                }
+            }
+            else{
+                std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                QMetaObject::invokeMethod(self, [self, st](){
+                    if(st.stop_requested()) std::exit(0);
+                    QMessageBox::warning(self, "Server Error", "Server is down, contact support or wait");
+                }, Qt::QueuedConnection);
+            }
+
+        }).detach();
+    });
 }
 
 void AccountPageWindow::reset(){
     table->clear();
+
     scheTable->setRowCount(0);
     scheTable->clear();
 
     enrolledScheTable->setRowCount(0);
     enrolledScheTable->clear();
+}
+
+void AccountPageWindow::selectSchedule(QTableWidgetItem* checkBOX){
+    if(checkBOX->column() != 10) return;
+
+    int theRowTheScheduleWasCheckedFrom = checkBOX->row();
+
+    if(checkBOX->checkState() == Qt::Checked){
+        std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " CHECKED" << std::endl;
+    }
+    else{
+        std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " UNCHECKED" << std::endl;
+    }
 }
 

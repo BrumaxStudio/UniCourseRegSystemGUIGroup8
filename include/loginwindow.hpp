@@ -35,12 +35,12 @@ public:
     QString ipAddress;
     QString portNumber;
     nlohmann::json serverResponse;
+    nlohmann::json reader_json;
 
     QMetaObject::Connection loginConnection;
     QMetaObject::Connection SignupConnection;
 
 private:
-    nlohmann::json reader_json;
     int loginCount;
     int signupCount;
 

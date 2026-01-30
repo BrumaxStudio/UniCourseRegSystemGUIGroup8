@@ -10,10 +10,16 @@
 #include <QHeaderView>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QMessageBox>
+#include <QPointer>
 
+#include <termcolor/termcolor.hpp>
 #include <nlohmann/json.hpp>
+#include <httplib.h>
 
+#include <thread>
 #include <iostream>
+
 
 class AccountPageWindow : public QWidget
 {
@@ -24,15 +30,28 @@ public:
 signals:
     void login_page();
     void signup_page();
+    void reload_page();
 
 public:
     nlohmann::json dataM;
+    nlohmann::json dataMMM;
+    nlohmann::json reader_json;
     void refreshPage();
     void reset();
     QTableWidget* scheTable;
     QTableWidget* enrolledScheTable;
 
+    QString ipAddress;
+    QString portNumber;
+    QString userName;
+
+    void selectSchedule(QTableWidgetItem* checkBOX);
+
 private:
+    int refreshCount;
+
+    QMetaObject::Connection refreshMO;
+
     QLabel* mainText;
     QTableWidget* table;
 
@@ -43,6 +62,7 @@ private:
 
     QPushButton* logOutPB;
     QPushButton* SignInPB;
+    QPushButton* ReLoadPB;
     QHBoxLayout* LOSI;
 
 };
