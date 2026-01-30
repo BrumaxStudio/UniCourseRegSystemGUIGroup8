@@ -373,7 +373,7 @@ void SignupWindow::refreshPage(){
                                 {"first_name", f_name.toStdString()},
                                 {"middle_name", m_name.toStdString()},
                                 {"last_name", l_name.toStdString()},
-                                {"sex", gen_v.toStdString()},
+                                {"gender", gen_v.toStdString()},
                                 {"date_of_birth", dob_v.toStdString()},
                                 {"dept", dept_v.toStdString()},
                                 {"level", level_v},
@@ -399,15 +399,15 @@ void SignupWindow::refreshPage(){
 
                 if(response){
                     if(response->status == 200){
-                        //self->signupCount++;
+                        self->signupCount++;
                         self->serverResponse = nlohmann::json::parse(response->body);
                         std::cout << termcolor::green << "Success: " << self->serverResponse["message"] << termcolor::reset << std::endl;
                         QMetaObject::invokeMethod(self, [self, st](){
                             if(st.stop_requested()) std::exit(0);
-                            //if(self->signupCount == 1){
+                            if(self->signupCount == 1){
                                 QMessageBox::information(self, "Success", "Successfully created an account, redirecting page now...");
                                 emit self->account_page();
-                            //}
+                            }
                         }, Qt::QueuedConnection);
                     }
                     else{
