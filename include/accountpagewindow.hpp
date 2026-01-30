@@ -63,6 +63,10 @@ private:
     QPushButton* logOutPB;
     QPushButton* SignInPB;
     QPushButton* ReLoadPB;
+
+    QPushButton* SavePB;
+    QHBoxLayout* SaveLayout;
+
     QHBoxLayout* LOSI;
 
 };

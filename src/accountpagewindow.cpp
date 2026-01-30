@@ -15,6 +15,15 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     scheTable = new QTableWidget(this);
     scheTable->setColumnCount(11);
 
+    SavePB = new QPushButton(this);
+    SavePB->setFont(QFont("Times"));
+    SavePB->setText("Save");
+    SavePB->setFixedSize(QSize(100, 20));
+
+    SaveLayout = new QHBoxLayout;
+    SaveLayout->addStretch();
+    SaveLayout->addWidget(SavePB);
+
     enrolledScheduleLabel = new QLabel(this);
     enrolledScheduleLabel->setFont(QFont("Times", 18));
     enrolledScheduleLabel->setText("Enrolled Schedules");
@@ -43,6 +52,7 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     mainLayout->addWidget(table);
     mainLayout->addWidget(scheduleLabel);
     mainLayout->addWidget(scheTable);
+    mainLayout->addLayout(SaveLayout);
     mainLayout->addWidget(enrolledScheduleLabel);
     mainLayout->addWidget(enrolledScheTable);
     mainLayout->addLayout(LOSI);
@@ -50,6 +60,8 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     this->setLayout(mainLayout);
 
     reader_json["enroll"] = nlohmann::json::array();
+
+    QObject::connect(scheTable, &QTableWidget::itemChanged, this, &AccountPageWindow::selectSchedule);
 }
 
 void AccountPageWindow::refreshPage(){
@@ -95,6 +107,8 @@ void AccountPageWindow::refreshPage(){
             }
         }
 
+        scheTable->blockSignals(true);
+
         for(size_t x = 0; x < scheDataList.size(); x++){
             scheTable->insertRow(x);
             auto scheData = scheDataList[x];
@@ -115,7 +129,7 @@ void AccountPageWindow::refreshPage(){
             scheTable->setItem(x, 10, checkBOX);
         }
 
-        QObject::connect(scheTable, &QTableWidget::itemChanged, this, &AccountPageWindow::selectSchedule);
+        scheTable->blockSignals(false);
 
         QStringList enrolledScheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Max Capacity", "Grade", "Date Enrolled", "Enrollment Status"};
         enrolledScheTable->setHorizontalHeaderLabels(enrolledScheHeader);
