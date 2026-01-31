@@ -13,7 +13,7 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     scheduleLabel->setFont(QFont("Times", 18));
     scheduleLabel->setText("Available Schedules");
     scheTable = new QTableWidget(this);
-    scheTable->setColumnCount(11);
+    scheTable->setColumnCount(12);
 
     SavePB = new QPushButton(this);
     SavePB->setFont(QFont("Times"));
@@ -75,7 +75,7 @@ void AccountPageWindow::refreshPage(){
         table->setHorizontalHeaderLabels(headers);
         table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-        QStringList scheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Maximum Capacity", "Select"};
+        QStringList scheHeader = {"Schedule ID", "Day of Week", "Starting Time", "Closing Time", "Venue", "Lecturer", "Course Code", "Course Title", "Current Enrollments", "Maximum Capacity", "Enrollment Status", "Select"};
         scheTable->setHorizontalHeaderLabels(scheHeader);
         scheTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -114,7 +114,7 @@ void AccountPageWindow::refreshPage(){
             auto scheData = scheDataList[x];
             auto checkBOX = new QTableWidgetItem();
             checkBOX->setFlags(checkBOX->flags() | Qt::ItemIsUserCheckable);
-            checkBOX->setCheckState(Qt::Unchecked);
+            checkBOX->setCheckState((scheData["enrollment_status"].get<std::string>() == "not active")? Qt::Unchecked: Qt::Checked);
 
             scheTable->setItem(x, 0, new QTableWidgetItem(QString::number(scheData["schedule_id"].get<int>())));
             scheTable->setItem(x, 1, new QTableWidgetItem(QString::fromStdString(scheData["day_of_week"].get<std::string>())));
@@ -126,7 +126,8 @@ void AccountPageWindow::refreshPage(){
             scheTable->setItem(x, 7, new QTableWidgetItem(QString::fromStdString(scheData["course_title"].get<std::string>())));
             scheTable->setItem(x, 8, new QTableWidgetItem(QString::fromStdString(scheData["current_enrollment"].get<std::string>())));
             scheTable->setItem(x, 9, new QTableWidgetItem(QString::fromStdString(scheData["max_capacity"].get<std::string>())));
-            scheTable->setItem(x, 10, checkBOX);
+            scheTable->setItem(x, 10, new QTableWidgetItem(QString::fromStdString(scheData["enrollment_status"].get<std::string>())));
+            scheTable->setItem(x, 11, checkBOX);
         }
 
         scheTable->blockSignals(false);
@@ -246,18 +247,22 @@ void AccountPageWindow::reset(){
 }
 
 void AccountPageWindow::selectSchedule(QTableWidgetItem* checkBOX){
-    if(checkBOX->column() != 10) return;
+    if(checkBOX->column() != 11) return;
 
     int theRowTheScheduleWasCheckedFrom = checkBOX->row();
-    int scheduleID = scheTable->item(theRowTheScheduleWasCheckedFrom, 0)->text().toInt();
+    size_t scheduleID = scheTable->item(theRowTheScheduleWasCheckedFrom, 0)->text().toInt();
 
     if(checkBOX->checkState() == Qt::Checked){
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " CHECKED" << std::endl;
         std::cout << "Enrolled in schedule " << scheduleID << std::endl;
+        nlohmann::json sch = {{"register", scheduleID}};
+        reader_json["enroll"].push_back(sch);
     }
     else{
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " UNCHECKED" << std::endl;
         std::cout << "Deleted enrollment in schedule " << scheduleID << std::endl;
+        nlohmann::json sch = {{"unregister", scheduleID}};
+        reader_json["enroll"].push_back(sch);
     }
 }
 
