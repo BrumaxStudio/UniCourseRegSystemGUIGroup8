@@ -20,7 +20,6 @@
 #include <thread>
 #include <iostream>
 
-
 class AccountPageWindow : public QWidget
 {
     Q_OBJECT
@@ -31,6 +30,7 @@ signals:
     void login_page();
     void signup_page();
     void reload_page();
+    void save_page();
 
 public:
     nlohmann::json dataM;

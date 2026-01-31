@@ -83,4 +83,8 @@ UniCouRegSysGro8::UniCouRegSysGro8(QString ipAddress, QString portNumber, QWidge
         acc->reset();
         acc->refreshPage();
     });
+
+    QObject::connect(acc, &AccountPageWindow::save_page, this, [this](){
+
+    });
 }

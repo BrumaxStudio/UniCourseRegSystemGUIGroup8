@@ -177,6 +177,10 @@ void AccountPageWindow::refreshPage(){
         emit signup_page();
     });
 
+    QObject::connect(SavePB, &QPushButton::clicked, [this](){
+        emit save_page();
+    });
+
     refreshCount = 0;
 
     QObject::disconnect(refreshMO);
@@ -245,12 +249,15 @@ void AccountPageWindow::selectSchedule(QTableWidgetItem* checkBOX){
     if(checkBOX->column() != 10) return;
 
     int theRowTheScheduleWasCheckedFrom = checkBOX->row();
+    int scheduleID = scheTable->item(theRowTheScheduleWasCheckedFrom, 0)->text().toInt();
 
     if(checkBOX->checkState() == Qt::Checked){
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " CHECKED" << std::endl;
+        std::cout << "Enrolled in schedule " << scheduleID << std::endl;
     }
     else{
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " UNCHECKED" << std::endl;
+        std::cout << "Deleted enrollment in schedule " << scheduleID << std::endl;
     }
 }
 
