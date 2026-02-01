@@ -137,15 +137,15 @@ void LoginWindow::refreshPage(){
                         }, Qt::QueuedConnection);
                     }
                     else{
-                        self->loginCount++;
+                        //self->loginCount++;
                         self->serverResponse = nlohmann::json::parse(response->body);
-                        if(self->loginCount == 1){
+                        //if(self->loginCount == 1){
                             std::cerr << termcolor::red << "Message: " << self->serverResponse["message"] << termcolor::reset << std::endl;
                             QMetaObject::invokeMethod(self, [self, st](){
                                 if(st.stop_requested()) std::exit(0);
                                 QMessageBox::warning(self, "Error", QString::fromStdString(self->serverResponse["message"]));
                             }, Qt::QueuedConnection);
-                        }
+                        //}
                     }
                 }
                 else{

@@ -49,6 +49,7 @@ public:
 
 private:
     int refreshCount;
+    int saveCount;
 
     QMetaObject::Connection refreshMO;
 
