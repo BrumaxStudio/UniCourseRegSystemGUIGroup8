@@ -11,6 +11,8 @@
 #include <QString>
 #include <QComboBox>
 #include <QPointer>
+#include <QTextEdit>
+#include <QDialog>
 
 #include <nlohmann/json.hpp>
 #include <termcolor/termcolor.hpp>
@@ -42,6 +44,7 @@ public:
 
 private:
     QPushButton* forget_password;
+    QHBoxLayout* fpl;
 
     int loginCount;
     int signupCount;

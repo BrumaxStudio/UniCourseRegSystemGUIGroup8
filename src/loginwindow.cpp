@@ -47,6 +47,16 @@ LoginWindow::LoginWindow(QWidget *parent)
     uniLayout->addWidget(univer);
     uniLayout->addWidget(uni);
 
+    //FORGET PASSWORD
+    forget_password = new QPushButton(this);
+    forget_password->setFont(QFont("Times"));
+    forget_password->setText("Forget Password");
+    forget_password->setFixedSize(QSize(150, 30));
+
+    fpl = new QHBoxLayout;
+    fpl->addStretch();
+    fpl->addWidget(forget_password);
+
     //LOGIN AND SIGNUP LAYOUT
     loginORsignup = new QHBoxLayout;
     loginORsignup->addWidget(loginButton);
@@ -58,6 +68,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     mainLayout->addLayout(UserNameLayout);
     mainLayout->addLayout(uniLayout);
     mainLayout->addLayout(passwordLayout);
+    mainLayout->addLayout(fpl);
     mainLayout->addLayout(loginORsignup);
     this->setLayout(mainLayout);
     this->refreshPage();
@@ -96,6 +107,59 @@ void LoginWindow::refreshPage(){
 
     loginButton->setText("Login");
     SignupButton->setText("Sign up");
+
+    QObject::connect(forget_password, &QPushButton::clicked, [this](){
+        QDialog* forgetPass = new QDialog(this);
+        forgetPass->setWindowTitle(tr("Reset Password"));
+        forgetPass->resize(QSize(400, 300));
+
+        QLabel* emailCodeLabel = new QLabel("Enter code sent to email", forgetPass);
+        QLineEdit* ecl = new QLineEdit(forgetPass);
+
+        QLabel* pass1 = new QLabel(tr("Password"));
+        QLineEdit* p1 = new QLineEdit(forgetPass);
+        p1->setEchoMode(QLineEdit::Password);
+
+        QLabel* pass2 = new QLabel(tr("Re-enter password"));
+        QLineEdit* p2 = new QLineEdit(forgetPass);
+        p2->setEchoMode(QLineEdit::Password);
+
+        QPushButton* resetButton = new QPushButton("Reset", forgetPass);
+
+        QHBoxLayout* email = new QHBoxLayout;
+        email->addWidget(emailCodeLabel);
+        email->addWidget(ecl);
+
+        QHBoxLayout* pa1 = new QHBoxLayout;
+        pa1->addWidget(pass1);
+        pa1->addWidget(p1);
+
+        QHBoxLayout* pa2 = new QHBoxLayout;
+        email->addWidget(pass2);
+        email->addWidget(p2);
+
+        QVBoxLayout* mainL = new QVBoxLayout;
+        mainL->addLayout(email);
+        mainL->addLayout(pa1);
+        mainL->addLayout(pa2);
+        mainL->addWidget(resetButton);
+
+        forgetPass->setLayout(mainL);
+
+        connect(resetButton, &QPushButton::clicked, forgetPass, &QDialog::accepted);
+
+        /*if(p1->text() != p2->text()){
+            QMessageBox::warning(forgetPass, "Error", "Passwords do not match!");
+        }
+        else*/ if(forgetPass->exec() == QDialog::Accepted){
+            QMessageBox::information(forgetPass, "Success", "Password reset successful!");
+        }
+        else{
+            QMessageBox::warning(forgetPass, "Close", "Closing window...");
+        }
+
+        forgetPass->exec();
+    });
 
     loginCount = 0;
 
