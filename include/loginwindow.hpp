@@ -41,6 +41,8 @@ public:
     QMetaObject::Connection SignupConnection;
 
 private:
+    QPushButton* forget_password;
+
     int loginCount;
     int signupCount;
 

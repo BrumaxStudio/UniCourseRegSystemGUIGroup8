@@ -59,12 +59,12 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
 
     this->setLayout(mainLayout);
 
-    reader_json["enroll"] = nlohmann::json::array();
-
     QObject::connect(scheTable, &QTableWidget::itemChanged, this, &AccountPageWindow::selectSchedule);
 }
 
 void AccountPageWindow::refreshPage(){
+
+    reader_json["enroll"] = nlohmann::json::array();
 
     if(dataM.contains("data") && !dataM["data"].is_null() && dataM.contains("schedule") && !dataM["schedule"].is_null() && dataM["schedule"].is_array()){
         std::cout << dataM.dump() << std::endl;
@@ -302,18 +302,12 @@ void AccountPageWindow::selectSchedule(QTableWidgetItem* checkBOX){
     if(checkBOX->checkState() == Qt::Checked){
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " CHECKED" << std::endl;
         std::cout << "Enrolled in schedule " << scheduleID << std::endl;
-        reader_json["enroll"].push_back(
-            nlohmann::json{
-                {"register", scheduleID}
-            });
+        reader_json["enroll"].push_back({{"action", "register"}, {"ID", scheduleID}});
     }
     else{
         std::cout << "Row: " << theRowTheScheduleWasCheckedFrom + 1 << " UNCHECKED" << std::endl;
         std::cout << "Deleted enrollment in schedule " << scheduleID << std::endl;
-        reader_json["enroll"].push_back(
-            nlohmann::json{
-                {"unregister", scheduleID}
-            });
+        reader_json["enroll"].push_back({{"action", "unregister"}, {"ID", scheduleID}});
     }
 }
 

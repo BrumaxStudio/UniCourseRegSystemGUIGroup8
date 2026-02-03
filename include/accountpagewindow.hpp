@@ -36,6 +36,7 @@ public:
     nlohmann::json dataM;
     nlohmann::json dataMMM;
     nlohmann::json reader_json;
+
     void refreshPage();
     void reset();
     QTableWidget* scheTable;

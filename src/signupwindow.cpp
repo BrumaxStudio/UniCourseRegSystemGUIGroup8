@@ -448,6 +448,8 @@ void SignupWindow::reset(){
     middleNameLE->clear();
     lastNameLE->clear();
 
+    un->clear();
+
     gen->clear();
     //uni->clear();
     dept->clear();
