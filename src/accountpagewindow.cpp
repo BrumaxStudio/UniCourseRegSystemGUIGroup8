@@ -60,7 +60,6 @@ AccountPageWindow::AccountPageWindow(QWidget *parent)
     this->setLayout(mainLayout);
 
     reader_json["enroll"] = nlohmann::json::array();
-    //reader_json["enroll"].push_back(tmp);
 
     QObject::connect(scheTable, &QTableWidget::itemChanged, this, &AccountPageWindow::selectSchedule);
 }
@@ -196,29 +195,31 @@ void AccountPageWindow::refreshPage(){
                     self->saveCount++;
                     self->dataMMM = nlohmann::json::parse(response->body);
                     std::cout << termcolor::green << "Success: " << self->dataMMM["message"] << termcolor::reset << std::endl;
+                    self->reader_json["enroll"].clear();
                     QMetaObject::invokeMethod(self, [self, st](){
                         if(st.stop_requested()) std::exit(0);
                         if(self->saveCount == 1){
                             QMessageBox::information(self, "Success", "Successfully enrolled/unenrolled in schedule(s)!");
-                            //emit self->reload_page();
                         }
+                        emit self->reload_page();
                     }, Qt::QueuedConnection);
                 }
                 else{
                     self->saveCount++;
                     self->dataMMM = nlohmann::json::parse(response->body);
+                    self->reader_json["enroll"].clear();
                     if(self->saveCount == 1){
                         std::cerr << termcolor::red << "Message: " << self->dataMMM["message"] << termcolor::reset << std::endl;
                         QMetaObject::invokeMethod(self, [self, st](){
                             if(st.stop_requested()) std::exit(0);
                             QMessageBox::warning(self, "Error", QString::fromStdString(self->dataMMM["message"]));
-                            self->reader_json["enroll"].clear();
                         }, Qt::QueuedConnection);
                     }
                 }
             }
             else{
                 std::cout << termcolor::red << "Server Error" << termcolor::reset << std::endl;
+                self->reader_json["enroll"].clear();
                 QMetaObject::invokeMethod(self, [self, st](){
                     if(st.stop_requested()) std::exit(0);
                     QMessageBox::warning(self, "Server Error", "Server is down, contact support or wait");
