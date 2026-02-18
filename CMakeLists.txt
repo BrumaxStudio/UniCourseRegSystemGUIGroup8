@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(creg8_gui VERSION 2026.2.1 LANGUAGES CXX)
+project(creg8_gui VERSION 2026.2.18 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,6 +10,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_BUILD_PARALLEL 8)
 set(APPLICATION_NAME "creg8-gui")
 set(BOOST_REGEX_STANDALONE ON CACHE BOOL "Build Boost.Regex in standalone mode")
+
+if(ANDROID)
+    add_compile_options(-fexperimental-library)
+endif()
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
@@ -55,7 +59,18 @@ endif(LINUX)
 set_target_properties(${APPLICATION_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE False
+    QT_ANDROID_MIN_SDK_VERSION 26
+    QT_ANDROID_TARGET_SDK_VERSION 34
 )
+
+if(ANDROID)
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY QT_ANDROID_VERSION_CODE 1)
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY QT_ANDROID_VERSION_NAME ${PROJECT_VERSION})
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY QT_ANDROID_PACKAGE_NAME "com.brumski.creg_gui")
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY OUTPUT_NAME "Creg8-gui")
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+    set_property(TARGET ${APPLICATION_NAME} PROPERTY QT_ANDROID_LABEL "University Course Registration System")
+endif()
 
 target_include_directories(${APPLICATION_NAME}
     PRIVATE

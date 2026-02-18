@@ -36,8 +36,12 @@ int main(int argc, char *argv[])
 
     UniCouRegSysGro8 window(QString::fromStdString(arg1), QString::fromStdString(arg2));
 
-    //window.passToServer(arg1, arg2);
+#ifndef ANDROID
     window.resize(800, 600);
+#else
+    window.showMaximized();
+#endif
+
     window.setWindowTitle("University Course Registration System - Group 8");
     window.show();
 
