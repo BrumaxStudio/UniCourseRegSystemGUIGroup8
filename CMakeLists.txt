@@ -15,6 +15,10 @@ if(ANDROID)
     add_compile_options(-fexperimental-library)
 endif()
 
+find_package(Slint REQUIRED COMPONENTS)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 configure_file(creg8Version.h.in ${PROJECT_BINARY_DIR}/creg8Version.h)
@@ -90,3 +94,12 @@ target_link_libraries(${APPLICATION_NAME}
     httplib
     Boost::regex
 )
+
+add_executable(creg8-gui2)
+target_sources(creg8-gui2
+    PRIVATE
+        src/slint/sources/Creg_Main.cpp
+)
+slint_target_sources(creg8-gui2 src/slint/ui/Creg8_Slint_Ui.slint)
+target_link_libraries(creg8-gui2 PRIVATE Slint::Slint ${FONTCONFIG_LIBRARIES})
+target_include_directories(creg8-gui2 PRIVATE ${CMAKE_BINARY_DIR})

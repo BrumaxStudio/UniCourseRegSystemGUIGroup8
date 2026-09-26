@@ -1,0 +1,49 @@
+import { Button } from "std-widgets.slint";
+export component Creg8-Window inherits Window {
+    preferred-width: 800px;
+    preferred-height: 730px;
+    title: "University Course Registration System - Group 8";
+    background: #aaDCe6;
+
+    VerticalLayout {
+        padding: 5px;
+        spacing: 5px;
+
+        Text{
+            text: "Welcome to the Course Registration Portal";
+            font-size: 30px;
+            font-weight: 800;
+            color: black;
+            horizontal-alignment: center;
+        }
+
+        RSU-logo := Rectangle {
+            Image {
+                source: @image-url("../../../resources/rsu_logo.jpg");
+                width: parent.width * 80%;
+                height: parent.height * 40%;
+                horizontal-alignment: center;
+            }
+        }
+
+        HorizontalLayout {
+            height: parent.height / 12;
+            padding: 15px;
+
+            log := Rectangle {
+                Text {text: "Login"; vertical-alignment: center; font-size: 24px; color: black;}
+                logTouch := TouchArea{}
+                border-color: black;
+                border-radius: 50px;
+                border-width: 1px;
+            }
+            sig := Rectangle {
+                Text {text: "Sign Up"; vertical-alignment: center; font-size: 24px; color: black;}
+                sigTouch := TouchArea{}
+                border-color: black;
+                border-radius: 50px;
+                border-width: 1px;
+            }
+        }
+    }
+}
