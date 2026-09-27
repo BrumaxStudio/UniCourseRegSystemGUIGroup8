@@ -1,4 +1,4 @@
-import { Button, LineEdit } from "std-widgets.slint";
+import { Button, LineEdit, ComboBox } from "std-widgets.slint";
 export component Creg8-Window inherits Window {
     preferred-width: 800px;
     preferred-height: 730px;
@@ -36,6 +36,11 @@ export component Creg8-Window inherits Window {
 
         UniRow := HorizontalLayout{
             Text {text: "University:"; font-size: 24px; color: black; font-weight: 650;}
+            ComboBox {
+                model: ["Rivers State University", "University of Port Harcourt", "Ignatius Ajuru"];
+                current-value: "Rivers State University";
+
+            }
         }
 
         PasswordRow := HorizontalLayout{
@@ -53,7 +58,7 @@ export component Creg8-Window inherits Window {
             spacing: 8px;
 
             log := Rectangle {
-                logText := Text {vertical-alignment: center; z:-1;}
+                logText := Text {vertical-alignment: center; color: black;}
                 logTouch := TouchArea{}
                 border-color: black;
                 border-radius: 50px;
@@ -62,16 +67,16 @@ export component Creg8-Window inherits Window {
                     not-hovering when !logTouch.has-hover && !logTouch.pressed: {
                         logText.text: "Log In";
                         logText.font-size: 24px;
-                        logText.color: black;
                     }
                     hovering-but-not-click when logTouch.has-hover && !logTouch.pressed: {
                         logText.text: "You want to Log In?";
                         logText.font-size: 20px;
-                        logText.color: black;
                     }
                     clicked-the-button when logTouch.pressed: {
                         log.background: gray;
                         out { animate log.background { duration: 1000ms;}}
+                        logText.text: "You want to Log In?";
+                        logText.font-size: 20px;
                     }
                 ]
             }
@@ -94,6 +99,8 @@ export component Creg8-Window inherits Window {
                     clicked-the-button when sigTouch.pressed: {
                         sig.background: gray;
                         out { animate sig.background { duration: 1000ms;}}
+                        sigText.text: "You want to Sign Up?";
+                        sigText.font-size: 20px;
                     }
                 ]
             }
