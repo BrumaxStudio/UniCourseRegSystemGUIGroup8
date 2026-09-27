@@ -1,4 +1,4 @@
-import { Button } from "std-widgets.slint";
+import { Button, LineEdit } from "std-widgets.slint";
 export component Creg8-Window inherits Window {
     preferred-width: 800px;
     preferred-height: 730px;
@@ -6,8 +6,8 @@ export component Creg8-Window inherits Window {
     background: #aaDCe6;
 
     VerticalLayout {
-        padding: 5px;
-        spacing: 5px;
+        padding: 12px;
+        spacing: 6px;
 
         Text{
             text: "Welcome to the Course Registration Portal";
@@ -20,29 +20,82 @@ export component Creg8-Window inherits Window {
         RSU-logo := Rectangle {
             Image {
                 source: @image-url("../../../resources/rsu_logo.jpg");
-                width: parent.width * 80%;
+                width: 100%;
                 height: parent.height * 40%;
                 horizontal-alignment: center;
             }
         }
 
+        UserNameRow := HorizontalLayout{
+            Text {text: "Username:"; font-size: 24px; color: black; font-weight: 650;}
+            LineEdit {
+                placeholder-text:  "Enter your username";
+                font-size: 24px;
+            }
+        }
+
+        UniRow := HorizontalLayout{
+            Text {text: "University:"; font-size: 24px; color: black; font-weight: 650;}
+        }
+
+        PasswordRow := HorizontalLayout{
+            Text {text: "Password:"; font-size: 24px; color: black; font-weight: 650;}
+            LineEdit {
+                placeholder-text:  "Enter your password";
+                font-size: 24px;
+                input-type: password;
+            }
+        }
+
         HorizontalLayout {
             height: parent.height / 12;
-            padding: 15px;
+            padding: 0px;
+            spacing: 8px;
 
             log := Rectangle {
-                Text {text: "Login"; vertical-alignment: center; font-size: 24px; color: black;}
+                logText := Text {vertical-alignment: center; z:-1;}
                 logTouch := TouchArea{}
                 border-color: black;
                 border-radius: 50px;
                 border-width: 1px;
+                states [
+                    not-hovering when !logTouch.has-hover && !logTouch.pressed: {
+                        logText.text: "Log In";
+                        logText.font-size: 24px;
+                        logText.color: black;
+                    }
+                    hovering-but-not-click when logTouch.has-hover && !logTouch.pressed: {
+                        logText.text: "You want to Log In?";
+                        logText.font-size: 20px;
+                        logText.color: black;
+                    }
+                    clicked-the-button when logTouch.pressed: {
+                        log.background: gray;
+                        out { animate log.background { duration: 1000ms;}}
+                    }
+                ]
             }
             sig := Rectangle {
-                Text {text: "Sign Up"; vertical-alignment: center; font-size: 24px; color: black;}
+                sigText := Text {vertical-alignment: center; color: black;}
                 sigTouch := TouchArea{}
                 border-color: black;
                 border-radius: 50px;
                 border-width: 1px;
+                states [
+                    not-hovering when !sigTouch.has-hover && !sigTouch.pressed: {
+                        sigText.text: "Sign Up";
+                        sigText.font-size: 24px;
+                    }
+                    hovering-but-not-click when sigTouch.has-hover && !sigTouch.pressed: {
+                        //sig.background: #afDCe6;
+                        sigText.text: "You want to Sign Up?";
+                        sigText.font-size: 20px;
+                    }
+                    clicked-the-button when sigTouch.pressed: {
+                        sig.background: gray;
+                        out { animate sig.background { duration: 1000ms;}}
+                    }
+                ]
             }
         }
     }
