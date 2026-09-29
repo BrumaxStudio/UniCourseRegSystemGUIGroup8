@@ -1,5 +1,31 @@
-.qtcreator/
+*
 
-build/
+!.gitignore
 
-.idea/
+!android/
+!android/* *
+
+!include/
+
+!src/
+!src/slint/
+!src/slint/*
+
+!resources/
+!resources/*
+
+!CMakeLists.txt
+
+!*.slint
+
+!*.cpp
+!*.hpp
+!*.h.in
+
+!*.md
+
+!*.png
+!*.rc
+!*.ico
+!*.jpg
+!*.qrc

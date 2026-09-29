@@ -1,9 +1,16 @@
 import { Button, LineEdit, ComboBox } from "std-widgets.slint";
+import { CregSignUpWindow } from "Creg8_Sign_Up.slint";
+
 export component Creg8-Window inherits Window {
     preferred-width: 800px;
     preferred-height: 730px;
     title: "University Course Registration System - Group 8";
     background: #aaDCe6;
+
+    SignupWindow := CregSignUpWindow{
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+    }
 
     VerticalLayout {
         padding: 12px;
@@ -82,7 +89,9 @@ export component Creg8-Window inherits Window {
             }
             sig := Rectangle {
                 sigText := Text {vertical-alignment: center; color: black;}
-                sigTouch := TouchArea{}
+                sigTouch := TouchArea{clicked => { SignupWindow.show();}}
+                //sigTouch.}
+
                 border-color: black;
                 border-radius: 50px;
                 border-width: 1px;
@@ -105,5 +114,6 @@ export component Creg8-Window inherits Window {
                 ]
             }
         }
+
     }
 }
