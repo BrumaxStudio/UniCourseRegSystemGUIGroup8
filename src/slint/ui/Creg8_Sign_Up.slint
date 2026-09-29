@@ -1,74 +1,94 @@
-import { LineEdit, ComboBox } from "std-widgets.slint";
+import { LineEdit, ComboBox, Button } from "std-widgets.slint";
 
 export component CregSignUpWindow inherits PopupWindow {
-    width: 720px;
-    height: 580px;
     close-policy: no-auto-close;
 
     Rectangle { //Rectangle Start
         width: 100%;
         height: 100%;
         background: gray;
-        border-radius: 30px;
+        border-radius: 10px;
         border-color: black;
-        border-width: 8.5px;
+        border-width: 4.5px;
 
     VerticalLayout { //MainLayout Start
         padding: 15px;
         spacing: 10px;
 
+        TitlePW := Text {text: "Create An Account"; font-size: 24px; color: black; font-weight: 700; horizontal-alignment: center;}
         FnameLayout := HorizontalLayout{
-            FNameVarName := Text{text: "First name:"; font-size: 24px; color: black; font-weight: 650;}
-            FNameData := LineEdit{placeholder-text: "Tamaratare"; font-size: 22px;}
+            FNameVarName := Text{text: "First name:"; font-size: 20px; color: black; font-weight: 650;}
+            FNameData := LineEdit{placeholder-text: "Tamaratare"; font-size: 18px;}
         }
         MnameLayout := HorizontalLayout{
-            MNameVarName := Text{text: "Middle name:"; font-size: 24px; color: black; font-weight: 650;}
-            MNameData := LineEdit{placeholder-text: "Oghenebrume"; font-size: 22px;}
+            MNameVarName := Text{text: "Middle name:"; font-size: 20px; color: black; font-weight: 650;}
+            MNameData := LineEdit{placeholder-text: "Oghenebrume"; font-size: 18px;}
         }
         LnameLayout := HorizontalLayout{
-            LNameVarName := Text{text: "Surname:"; font-size: 24px; color: black; font-weight: 650;}
-            LNameData := LineEdit{placeholder-text: "David"; font-size: 22px;}
+            LNameVarName := Text{text: "Surname:"; font-size: 20px; color: black; font-weight: 650;}
+            LNameData := LineEdit{placeholder-text: "David"; font-size: 18px;}
         }
         UserNameLayout := HorizontalLayout{
-            UserNameVarName := Text{text: "Username:"; font-size: 24px; color: black; font-weight: 650;}
-            UserNameData := LineEdit{placeholder-text: "rsu.student"; font-size: 22px;}
+            UserNameVarName := Text{text: "Username:"; font-size: 20px; color: black; font-weight: 650;}
+            UserNameData := LineEdit{placeholder-text: "rsu.student"; font-size: 18px;}
         }
         GenderLayout := HorizontalLayout{
-            GenderVarName := Text{text: "Sex:"; font-size: 24px; color: black; font-weight: 650;}
+            GenderVarName := Text{text: "Sex:"; font-size: 20px; color: black; font-weight: 650;}
             GenderData := ComboBox {model: ["Male", "Female"]; current-value: "Female";}
         }
         UniversityNameLayout := HorizontalLayout{
-            UniNameVarName := Text{text: "University:"; font-size: 24px; color: black; font-weight: 650;}
+            UniNameVarName := Text{text: "University:"; font-size: 20px; color: black; font-weight: 650;}
             UniNameData := ComboBox {model: ["Rivers State University", "University of Port Harcourt", "Ignatius Ajuru"];
                             current-value: "Rivers State University";}
         }
         DeptNameLayout := HorizontalLayout{
-            DeptNameVarName := Text{text: "Department:"; font-size: 24px; color: black; font-weight: 650;}
+            DeptNameVarName := Text{text: "Department:"; font-size: 20px; color: black; font-weight: 650;}
             DeptNameData := ComboBox {model: ["Computer Eng", "Petroleum Eng"]; current-value: "Computer Eng";}
         }
         LevelLayout := HorizontalLayout{
-            LevelVarName := Text{text: "Level:"; font-size: 24px; color: black; font-weight: 650;}
+            LevelVarName := Text{text: "Level:"; font-size: 20px; color: black; font-weight: 650;}
             LevelData := ComboBox {model: [100, 200, 300, 400, 500]; current-value: 100;}
         }
         MatNoLayout := HorizontalLayout{
-            MatNoVarName := Text{text: "Username:"; font-size: 24px; color: black; font-weight: 650;}
-            MatNoData := LineEdit{placeholder-text: "1000"; font-size: 22px;}
+            MatNoVarName := Text{text: "Username:"; font-size: 20px; color: black; font-weight: 650;}
+            MatNoData := LineEdit{placeholder-text: "1000"; font-size: 18px;}
         }
         EmailLayout := HorizontalLayout{
-            EmailVarName := Text{text: "Email:"; font-size: 24px; color: black; font-weight: 650;}
-            EmailData := LineEdit{placeholder-text: "rsu@student.com"; font-size: 22px;}
+            EmailVarName := Text{text: "Email:"; font-size: 20px; color: black; font-weight: 650;}
+            EmailData := LineEdit{placeholder-text: "rsu@student.com"; font-size: 18px;}
         }
         PhoneNoLayout := HorizontalLayout{
-            PhoneNoVarName := Text{text: "Phone Number:"; font-size: 24px; color: black; font-weight: 650;}
-            PhoneNoData := LineEdit{placeholder-text: "+234 111 234 1245"; font-size: 22px;}
+            PhoneNoVarName := Text{text: "Phone Number:"; font-size: 20px; color: black; font-weight: 650;}
+            PhoneNoData := LineEdit{placeholder-text: "+234 111 234 1245"; font-size: 18px;}
         }
         PasswordLayout := HorizontalLayout{
-            PaswordVarName := Text{text: "Password:"; font-size: 24px; color: black; font-weight: 650;}
-            PasswordData := LineEdit{placeholder-text: "pass67"; font-size: 22px;}
+            PaswordVarName := Text{text: "Password:"; font-size: 20px; color: black; font-weight: 650;}
+            PasswordData := LineEdit{placeholder-text: "pass67"; font-size: 18px;}
         }
         RetryPasswordLayout := HorizontalLayout{
-            RetryPaswordVarName := Text{text: "Retry Password:"; font-size: 24px; color: black; font-weight: 650;}
-            RetryPasswordData := LineEdit{placeholder-text: "pass67"; font-size: 22px;}
+            RetryPaswordVarName := Text{text: "Retry Password:"; font-size: 20px; color: black; font-weight: 650;}
+            RetryPasswordData := LineEdit{placeholder-text: "pass67"; font-size: 18px;}
+        }
+        ButtonsLayout := HorizontalLayout{
+            spacing: 10px;
+            Rectangle {
+                Text {text: "Already have an account";}
+                border-radius: 10px;
+                border-color: black;
+                border-width: 1px;
+            }
+            Rectangle {
+                Text {text: "Sign Up";}
+                border-radius: 10px;
+                border-color: black;
+                border-width: 1px;
+            }
+            Rectangle {
+                Text{text: "Cancel";}
+                border-radius: 10px;
+                border-color: black;
+                border-width: 1px;
+            }
         }
     }/*MainLayout End*/ }//Rectangle End
 }
