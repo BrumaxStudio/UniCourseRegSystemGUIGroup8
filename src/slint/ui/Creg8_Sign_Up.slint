@@ -2,6 +2,7 @@ import { LineEdit, ComboBox, Button } from "std-widgets.slint";
 
 export component CregSignUpWindow inherits PopupWindow {
     close-policy: no-auto-close;
+    in-out property <bool> clickedCancel: false;
 
     Rectangle { //Rectangle Start
         width: 100%;
@@ -71,24 +72,10 @@ export component CregSignUpWindow inherits PopupWindow {
         }
         ButtonsLayout := HorizontalLayout{
             spacing: 10px;
-            Rectangle {
-                Text {text: "Already have an account";}
-                border-radius: 10px;
-                border-color: black;
-                border-width: 1px;
-            }
-            Rectangle {
-                Text {text: "Sign Up";}
-                border-radius: 10px;
-                border-color: black;
-                border-width: 1px;
-            }
-            Rectangle {
-                Text{text: "Cancel";}
-                border-radius: 10px;
-                border-color: black;
-                border-width: 1px;
-            }
+            Button {text: "Already have an account";}
+            Button {text: "Sign Up";}
+            Button {text: "Cancel"; clicked => {root.close()}}
+            Button{text: "About";}
         }
     }/*MainLayout End*/ }//Rectangle End
 }
