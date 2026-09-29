@@ -44,7 +44,9 @@ export component CregSignUpWindow inherits PopupWindow {
         }
         DeptNameLayout := HorizontalLayout{
             DeptNameVarName := Text{text: "Department:"; font-size: 20px; color: black; font-weight: 650;}
-            DeptNameData := ComboBox {model: ["Computer Eng", "Petroleum Eng"]; current-value: "Computer Eng";}
+            DeptNameData := ComboBox {model: ["Agricultural Engineering", "Civil Engineering", "Computer Engineering", "Chemical Engineering",
+                                              "Electrical Engineering", "Marine Engineering", "Mechanical Engineering", "Petroleum Engineering"
+                                             ]; current-value: "Computer Engineering";}
         }
         LevelLayout := HorizontalLayout{
             LevelVarName := Text{text: "Level:"; font-size: 20px; color: black; font-weight: 650;}
