@@ -19,6 +19,7 @@
 !*.slint
 
 !*.cpp
+!*.cppm
 !*.hpp
 !*.h.in
 
@@ -29,3 +30,8 @@
 !*.ico
 !*.jpg
 !*.qrc
+
+.qtcreator/
+.idea/
+build/
+cmake-build-debug/
